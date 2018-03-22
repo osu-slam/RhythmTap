@@ -60,7 +60,9 @@
      <Compile Include="Assets\Scripts\TextController.cs" />
      <Compile Include="Assets\Scripts\TextureStorage\RhythmDataStorage.cs" />
      <Compile Include="Assets\WelcomeController.cs" />
+     <None Include="Assets\Scripts\RhythmData\rhythm1.xml" />
      <None Include="Assets\Scripts\RhythmData\rhythm.xml" />
+     <None Include="Assets\Scripts\RhythmData\what-is-your-name-85.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

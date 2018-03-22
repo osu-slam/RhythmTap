@@ -10,11 +10,12 @@ public class DrumController : MonoBehaviour {
 	public float bpm = 0f; //default
 
 	public AudioSource SingleStickSfx;
-	public AudioSource bpm120;
-	public AudioSource bpm180;
-	public AudioSource bpm30;
-	public AudioSource bpm60;
-    public AudioSource rhythm;
+    public AudioSource game0Audio;
+	public AudioSource game1Audio;
+	public AudioSource game2Audio;
+	public AudioSource game3Audio;
+	public AudioSource game4Audio;
+
     //public Text scoreText;
     public Text countdownText;
 	public Text promptText;
@@ -77,7 +78,7 @@ public class DrumController : MonoBehaviour {
             RhythmLoader rhythmLoader = new RhythmLoader();
             rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
 			stdList = rhythmLoader.GetRhythmTimes ();
-			halfNotes = rhythmLoader.GetHalfNoteDurations (100);
+			halfNotes = rhythmLoader.GetHalfNoteDurations ((int)bpm);
 			TNBText = stdList.Count;
 
 			/* init */
@@ -102,7 +103,27 @@ public class DrumController : MonoBehaviour {
 			launchTime = Time.timeSinceLevelLoad;
 			hasLaunched = false;
 		}
-	
+		StartAudio ();
+	}
+
+	void StartAudio(){
+		switch (MenuController.gameNum) {
+		case 0:
+			game0Audio.Play ();
+			break;
+		case 1:
+			game1Audio.Play ();
+			break;
+		case 2:
+			game2Audio.Play ();
+			break;
+		case 3:
+			game3Audio.Play ();
+			break;
+		default:
+			game4Audio.Play ();
+			break;
+		}
 	}
 
 	// Update is called once per frame
@@ -224,23 +245,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void StartCountDown(){
-		if (bpm == 120f) {
-			countDownTime = Time.timeSinceLevelLoad;
-			bpm120.Play ();
-		} else if (bpm == 30f) {
-			countDownTime = Time.timeSinceLevelLoad;
-			bpm30.Play ();
-
-		} else if (bpm == 180f) {
-			countDownTime = Time.timeSinceLevelLoad;
-			bpm180.Play ();
-		} else if (bpm == 60f) {
-			countDownTime = Time.timeSinceLevelLoad;
-			bpm60.Play ();
-		} else {
-			countDownTime = Time.timeSinceLevelLoad;
-			//rhythm.Play ();
-		}
+		countDownTime = Time.timeSinceLevelLoad;
 		countdownText.text = "5";
 		hasLaunched = true;
 	}

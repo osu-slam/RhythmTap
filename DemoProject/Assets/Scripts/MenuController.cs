@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour {
 	public static float bpm;
 	public static bool impromptu;
+	public static int gameNum;
 	public Text Username_field;
 
 
@@ -21,35 +22,32 @@ public class MenuController : MonoBehaviour {
 		
 	}
 	public void StartGame0(){
-		bpm = 60;
+		gameNum = 0;
+		bpm = 85;
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
 	public void StartGame1(){
-		bpm = 30;
+		gameNum = 1;
+		bpm = 85;
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
 	public void StartGame2(){
-		bpm = 120;
+		gameNum = 2;
+		bpm = 85;
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
 	public void StartGame3(){
-		bpm = 180;
+		gameNum = 3;
+		bpm = 85;
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
-	public void StartGame5(){
-		bpm = 0;
-		impromptu = true;
-		SceneManager.LoadScene("MainScene");
-	
-	}
-
-    public void StartGame6()
-    {
-        bpm = 100;
+    public void StartGame4(){
+		gameNum = 4;
+        bpm = 85;
         impromptu = false;
         SceneManager.LoadScene("MainScene");
 
