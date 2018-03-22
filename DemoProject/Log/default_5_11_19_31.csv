@@ -1,0 +1,14 @@
+Session,Start,05/11/2017 19:31:32,
+BPM,100.0000,
+3,1.832714
+4,2.450757
+5,3.034711
+6,3.635432
+7,4.23414
+TotalNumberOfBeats,40,
+NumberOfHits,5,
+NumberOfMisses,35,
+NumberOfMis-Hits,0,
+AverageTimeOffsets,0.03755078,
+TimeOffsetsVariance,0.00528246,
+Tendency,Late,

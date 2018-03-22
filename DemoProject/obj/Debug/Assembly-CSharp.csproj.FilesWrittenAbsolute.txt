@@ -1,0 +1,17 @@
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEditor.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Mono.Cecil.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Unity.DataContract.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/runzhou/Desktop/UnityWorkspace/DemoProject/Temp/bin/Debug/Mono.Cecil.Mdb.dll
