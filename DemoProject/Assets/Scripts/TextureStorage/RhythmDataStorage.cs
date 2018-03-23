@@ -20,7 +20,7 @@ namespace Assets.Scripts.TextureStorage
         public static XmlDocument GetRhythm()
         {
 			int gameNum = MenuController.gameNum;
-			int bpm = (int)MenuController.bpm;
+			int bpm = Convert.ToInt32(MenuController.bpm);
 			string file = "./Assets/Scripts/RhythmData/" + names [gameNum] + "-" + bpm + ".xml";
 			rhythm = new XmlDocument();
 			//rhythm.Load("./Assets/Scripts/RhythmData/rhythm.xml");

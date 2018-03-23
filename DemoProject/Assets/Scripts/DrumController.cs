@@ -263,8 +263,8 @@ public class DrumController : MonoBehaviour {
 	}
 
 	bool HighlightDrum(float time){
-		float upperBound = time + 0.1f;
-		float lowerBound = time - 0.1f;
+		float upperBound = time + 0.25f;
+		float lowerBound = time + 0.05f;
 		if (Time.timeSinceLevelLoad > lowerBound && Time.timeSinceLevelLoad < upperBound) {
 			sr.color = Color.gray;
 		} else {

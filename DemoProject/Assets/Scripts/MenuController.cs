@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
-	public static float bpm;
+	public static float bpm = 85;
 	public static bool impromptu;
 	public static int gameNum;
 	public Text Username_field;
