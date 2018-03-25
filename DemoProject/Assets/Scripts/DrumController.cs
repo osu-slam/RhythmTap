@@ -11,10 +11,6 @@ public class DrumController : MonoBehaviour {
 
 	public AudioSource SingleStickSfx;
     public AudioSource game0Audio;
-	public AudioSource game1Audio;
-	public AudioSource game2Audio;
-	public AudioSource game3Audio;
-	public AudioSource game4Audio;
 
     //public Text scoreText;
     public Text countdownText;
@@ -57,7 +53,7 @@ public class DrumController : MonoBehaviour {
 	public static int NOMText = 0;
 
 	SpriteRenderer sr;
-	int i = 1;
+	int i = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -107,7 +103,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void StartAudio(){
-		switch (MenuController.gameNum) {
+		/*switch (MenuController.gameNum) {
 		case 0:
 			game0Audio.Play ();
 			break;
@@ -123,7 +119,9 @@ public class DrumController : MonoBehaviour {
 		default:
 			game4Audio.Play ();
 			break;
-		}
+		}*/
+		RhythmSoundStorage.GetAudio (game0Audio);
+		game0Audio.Play ();
 	}
 
 	// Update is called once per frame
@@ -253,10 +251,7 @@ public class DrumController : MonoBehaviour {
 	void UpdateDrumHighlight(){
 		if (i < stdList.Count) {
 			float time;
-			if (hasPlayed)
-				time = stdList [i] + startTime;
-			else
-				time = stdList [i] + 8 * beat;
+			time = stdList [i] + 8 * beat;
 			if (!HighlightDrum (time))
 				i++;
 		}
@@ -278,7 +273,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - countDownTime > 5.8 * beat) {
+		if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
 			countdownText.text = "";
 			hasStarted = true;
 		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
