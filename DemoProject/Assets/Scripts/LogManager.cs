@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 
 public class LogManager {
-
+	/*
     private static LogManager instance;
     internal static LogManager Instance
     {
@@ -47,10 +47,10 @@ public class LogManager {
 		string contents = arg1 + "," + arg2 + ","  + "\n";
 		File.AppendAllText(path, contents);
 	}
-
+*/
 
 	/* log the start Date */
-	internal void Log()
+/*	internal void Log()
 	{
 		string contents = DateTime.Now +"\n";
 		File.AppendAllText(path, contents);
@@ -81,5 +81,5 @@ public class LogManager {
         //Log("Session", "Drums", drums.ToString());
         Log("BPM", bpm.ToString("f4"));
         //Log("Session", "TimeSignature", timeSignature);
-    }
+    }*/
 }

@@ -62,7 +62,7 @@ public class DrumController : MonoBehaviour {
 		if (MenuController.impromptu == false) {
 			analyzed = false;
 			bpm = (float)MenuController.bpm;
-			LogManager.Instance.LogSessionStart (bpm);
+			//LogManager.Instance.LogSessionStart (bpm);
 
 			list = new List<float> ();
 			//Set total num of beats based on current bpm selected;
@@ -95,7 +95,7 @@ public class DrumController : MonoBehaviour {
 			countdownText.text = "";
 			lengthOfAudio = 60.0f;
 			bpm = (float)MenuController.bpm;
-			LogManager.Instance.LogSessionStart (bpm);
+			//LogManager.Instance.LogSessionStart (bpm);
 			launchTime = Time.timeSinceLevelLoad;
 			hasLaunched = false;
 		}
@@ -136,7 +136,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateRegularPlayMode(){
-		if (Time.timeSinceLevelLoad - launchTime > 1.3 && !hasLaunched) {
+		if (Time.timeSinceLevelLoad - launchTime > 1*beat && !hasLaunched) {
 			StartCountDown (); //hasLaunched = true
 		}
 		if (!hasPlayed && hasLaunched) {
@@ -205,7 +205,7 @@ public class DrumController : MonoBehaviour {
 
 	//analizing timestamps after finishing the song
 	void PerformanceAnalysis(){
-		LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
+		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
 		if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
 			totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
 		} else {
@@ -231,14 +231,14 @@ public class DrumController : MonoBehaviour {
 		} else {
 			TendText = "Early";
 		}
-
+		/*
 		LogManager.Instance.Log("TotalNumberOfBeats", TNBText.ToString());
 		LogManager.Instance.Log("NumberOfHits", NOHText.ToString());
 		LogManager.Instance.Log("NumberOfMisses", NOMText.ToString());
 		LogManager.Instance.Log("NumberOfMis-Hits", NODHText.ToString());
 		LogManager.Instance.Log("AverageTimeOffsets", ATOText.ToString());
 		LogManager.Instance.Log("TimeOffsetsVariance", TOVText.ToString());
-		LogManager.Instance.Log("Tendency", TendText.ToString());
+		LogManager.Instance.Log("Tendency", TendText.ToString());*/
 
 	}
 

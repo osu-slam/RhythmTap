@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\DropDownEffect.cs" />
+     <Compile Include="Assets\MainSceneScript.cs" />
      <Compile Include="Assets\Scripts\DrumController.cs" />
      <Compile Include="Assets\Scripts\LogManager.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
@@ -61,14 +62,22 @@
      <Compile Include="Assets\Scripts\TextureStorage\RhythmDataStorage.cs" />
      <Compile Include="Assets\Scripts\TextureStorage\RhythmSoundStorage.cs" />
      <Compile Include="Assets\WelcomeController.cs" />
+     <None Include="Assets\Scripts\RhythmData\i-am-thir-sty-75.xml" />
+     <None Include="Assets\Scripts\RhythmData\i-am-thir-sty-65.xml" />
      <None Include="Assets\Scripts\RhythmData\how-are-you-65.xml" />
+     <None Include="Assets\Scripts\RhythmData\i-want-to-sing-75.xml" />
      <None Include="Assets\Scripts\RhythmData\i-want-to-sing-85.xml" />
      <None Include="Assets\Scripts\RhythmData\rhythm1.xml" />
      <None Include="Assets\Scripts\RhythmData\im-hun-gry-85.xml" />
+     <None Include="Assets\Scripts\RhythmData\what-is-your-name-75.xml" />
      <None Include="Assets\Scripts\RhythmData\i-am-thir-sty-85.xml" />
      <None Include="Assets\Scripts\RhythmData\how-are-you-85.xml" />
      <None Include="Assets\Scripts\RhythmData\what-is-your-name-85.xml" />
+     <None Include="Assets\Scripts\RhythmData\what-is-your-name-65.xml" />
+     <None Include="Assets\Scripts\RhythmData\i-want-to-sing-65.xml" />
+     <None Include="Assets\Scripts\RhythmData\im-hun-gry-75.xml" />
      <None Include="Assets\Scripts\RhythmData\how-are-you-75.xml" />
+     <None Include="Assets\Scripts\RhythmData\im-hun-gry-65.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
