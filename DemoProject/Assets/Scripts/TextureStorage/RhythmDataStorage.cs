@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using UnityEngine;
 
 namespace Assets.Scripts.TextureStorage
 {
@@ -21,7 +22,7 @@ namespace Assets.Scripts.TextureStorage
         {
 			int gameNum = MenuController.gameNum;
 			int bpm = Convert.ToInt32(MenuController.bpm);
-			string file = "./Assets/Scripts/RhythmData/" + names [gameNum] + "-" + bpm + ".xml";
+			string file = Application.streamingAssetsPath + "/RhythmData/" + names [gameNum] + "-" + bpm + ".xml";
 			rhythm = new XmlDocument();
 			//rhythm.Load("./Assets/Scripts/RhythmData/rhythm.xml");
 			rhythm.Load(file);

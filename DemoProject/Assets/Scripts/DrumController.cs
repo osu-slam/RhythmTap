@@ -41,9 +41,10 @@ public class DrumController : MonoBehaviour {
 	float totalOff = 0;
 	float countDownTime;
 
-	float halfBeat = 0.20f;
+	float error = 0.1f;
 	float beat = 0;
 	int stdIndex = 0;
+
 	public static int TNBText = 8;
 	public static float ATOText = 0.0f;
 	public static float TOVText = 0.0f;
@@ -72,7 +73,7 @@ public class DrumController : MonoBehaviour {
 			stdList = new List<float> ();
             /* Testing */
             RhythmLoader rhythmLoader = new RhythmLoader();
-            rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
+			rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
 			stdList = rhythmLoader.GetRhythmTimes ();
 			halfNotes = rhythmLoader.GetHalfNoteDurations ((int)bpm);
 			TNBText = stdList.Count;
@@ -136,13 +137,13 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateRegularPlayMode(){
-		if (Time.timeSinceLevelLoad - launchTime > 1*beat && !hasLaunched) {
+		if (Time.timeSinceLevelLoad - launchTime > 2*beat && !hasLaunched) {
 			StartCountDown (); //hasLaunched = true
 		}
 		if (!hasPlayed && hasLaunched) {
 			UpdateCountDownText (); //hasStarted = true
 
-			if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
+			if (Time.timeSinceLevelLoad - countDownTime > 8 * beat) {
 				hasPlayed = true;
 				StartPlayingSession (); //set startTime
 			}
@@ -150,8 +151,8 @@ public class DrumController : MonoBehaviour {
 				EndPlayingSession (); //hasEnded = true
 			}
 		} else {
-			if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + beat * 8) {
-				PromptMenu (); //hasEnded = true
+			if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + beat * 9) {
+				EndPlayingSession (); //hasEnded = true
 			}
 		}
 
@@ -205,8 +206,27 @@ public class DrumController : MonoBehaviour {
 
 	//analizing timestamps after finishing the song
 	void PerformanceAnalysis(){
+		int stdListIndex = 0;
+		int listIndex = 0;
+
+		while (stdListIndex < stdList.Count && listIndex < list.Count) {
+			float upper = stdList [stdListIndex] + error + 8 * beat;
+			float lower = stdList [stdListIndex] - error + 8 * beat;
+			if (list [listIndex] < upper && list [listIndex] > lower) {
+				numberOfHits++;
+				stdListIndex++;
+				listIndex++;
+			} else if (list [listIndex] > upper) {
+				stdListIndex++;
+			} else {
+				listIndex++;
+			}
+		}
+
+		NOHText = numberOfHits;
+		TOVText = (float)((numberOfHits * 100)/TNBText);
 		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
-		if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
+		/*if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
 			totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
 		} else {
 			totalLateOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
@@ -230,7 +250,7 @@ public class DrumController : MonoBehaviour {
 			TendText = "Late";
 		} else {
 			TendText = "Early";
-		}
+		}*/
 		/*
 		LogManager.Instance.Log("TotalNumberOfBeats", TNBText.ToString());
 		LogManager.Instance.Log("NumberOfHits", NOHText.ToString());
@@ -277,9 +297,7 @@ public class DrumController : MonoBehaviour {
 			countdownText.text = "";
 			hasStarted = true;
 		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
-			countdownText.text = "0";
-
-
+			countdownText.text = "Go!";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
 			countdownText.text = "1";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
@@ -288,19 +306,19 @@ public class DrumController : MonoBehaviour {
 			countdownText.text = "3";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 1 * beat) {
 			countdownText.text = "4";
-		} 
+		}
 	}
 
 	void StartPlayingSession(){
 		//rhythm.Stop();
-		halfBeat = 0.50f; // TODO
+		//halfBeat = 0.50f; // TODO
 		startTime = Time.timeSinceLevelLoad;
 		//rhythm.Play();
 	}
 
 	void UpdateKeyDown(){
 		//add timestamp to the list
-		list.Add (Mathf.Abs (Time.timeSinceLevelLoad - startTime));
+		list.Add (Time.timeSinceLevelLoad);
 
 		//play sound clip
 		SingleStickSfx.Play ();
@@ -351,10 +369,10 @@ public class DrumController : MonoBehaviour {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}
-		PromptMenu ();
-		if (Input.GetKeyDown (KeyCode.P)) {
+		//PromptMenu ();
+		//if (Input.GetKeyDown (KeyCode.P)) {
 			SceneManager.LoadScene ("Analysis");
-		}
+		//}
 	}
 
 	void PromptMenu(){
