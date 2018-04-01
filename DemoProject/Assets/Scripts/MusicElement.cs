@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     class MusicElement
     {
-        private enum ElementType {QuarterNote, EighthNote};
+		private enum ElementType {QuarterNote, EighthNote, Eighth_Note_T};
         private ElementType EleType { get; set; }
         public int MsDuration { get; set; }
 
@@ -15,20 +15,25 @@ namespace Assets.Scripts
         {
             if (type.Equals(ElementType.QuarterNote.ToString())) {
                 EleType = ElementType.QuarterNote;
-            } else {
+			} else if (type.Equals(ElementType.Eighth_Note_T.ToString())){
+				EleType = ElementType.Eighth_Note_T;
+			} else {
                 EleType = ElementType.EighthNote;
             }
-            MsDuration = MsDuration;
+            MsDuration = msDuration;
         }
 
-		public float GetHalfNoteDuration(int bpm){
-			float halfNoteDuration = 60.0f / bpm;
+		public float GetNoteDuration(int bpm){
+			float noteDuration = 60.0f / bpm;
 			switch (EleType) {
 				case ElementType.EighthNote:
-					halfNoteDuration /= 2;
+					noteDuration /= 2;
+					break;
+				case ElementType.Eighth_Note_T:
+					noteDuration /= 3;
 					break;
 			}
-			return halfNoteDuration;
+			return noteDuration;
 		}
     }
 }

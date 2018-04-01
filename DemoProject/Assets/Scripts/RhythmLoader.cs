@@ -43,9 +43,17 @@ namespace Assets.Scripts
 		public List<float> GetHalfNoteDurations(int bpm){
 			List<float> halfNoteDuration = new List<float> ();
 			foreach (MusicElement me in musicElements) {
-				halfNoteDuration.Add(me.GetHalfNoteDuration (bpm));
+				halfNoteDuration.Add(me.GetNoteDuration (bpm));
 			}
 			return halfNoteDuration;
+		}
+
+		public List<float> GetNoteDurations(int bpm){
+			List<float> durations = new List<float> ();
+			foreach (MusicElement me in musicElements) {
+				durations.Add(me.GetNoteDuration(bpm));
+			}
+			return durations;
 		}
     }
 }

@@ -22,6 +22,7 @@ public class DrumController : MonoBehaviour {
 	public List<float> list;
 	public List<float> stdList;
 	public List<float> halfNotes;
+	private List<float> stdDuration;
 	bool hasStarted = false;
 	bool hasEnded = false;
 	bool hasLaunched = false;
@@ -44,6 +45,7 @@ public class DrumController : MonoBehaviour {
 	float error = 0.1f;
 	float beat = 0;
 	int stdIndex = 0;
+	float drumHighlightBreak = 0.05f;
 
 	public static int TNBText = 8;
 	public static float ATOText = 0.0f;
@@ -76,6 +78,7 @@ public class DrumController : MonoBehaviour {
 			rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
 			stdList = rhythmLoader.GetRhythmTimes ();
 			halfNotes = rhythmLoader.GetHalfNoteDurations ((int)bpm);
+			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
 			TNBText = stdList.Count;
 
 			/* init */
@@ -272,13 +275,15 @@ public class DrumController : MonoBehaviour {
 		if (i < stdList.Count) {
 			float time;
 			time = stdList [i] + 8 * beat;
-			if (!HighlightDrum (time))
+			if (!HighlightDrum (time, stdDuration[i]))
 				i++;
 		}
 	}
 
-	bool HighlightDrum(float time){
-		float upperBound = time + 0.25f;
+	bool HighlightDrum(float time, float duration){
+		//float upperBound = time + 0.25f;
+		//float lowerBound = time + 0.05f;
+		float upperBound = time + duration - drumHighlightBreak;
 		float lowerBound = time + 0.05f;
 		if (Time.timeSinceLevelLoad > lowerBound && Time.timeSinceLevelLoad < upperBound) {
 			sr.color = Color.gray;
