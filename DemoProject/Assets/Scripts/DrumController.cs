@@ -169,6 +169,8 @@ public class DrumController : MonoBehaviour {
 				UpdateKeyDown ();
 			else if (Input.GetKeyUp (KeyCode.Space))
 				UpdateKeyUp ();
+			else if (Input.GetKeyUp (KeyCode.P))
+				EndPlayingSession ();
 		}
 
 
@@ -382,7 +384,8 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateKeyUp(){
-		duration[duration.Count - 1] = Time.timeSinceLevelLoad - duration [duration.Count - 1];
+		if(duration.Count > 0)
+			duration[duration.Count - 1] = Time.timeSinceLevelLoad - duration [duration.Count - 1];
 	}
 
 	void EndPlayingSession(){
