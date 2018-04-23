@@ -8,21 +8,21 @@ using UnityEngine.UI;
 public class TextController : MonoBehaviour {
 
 	public Text TNBText;
-	public Text ATOText;
-	public Text TOVText;
-	public Text TendText;
+	public Text OnsetScoreText;
+	public Text AvgScoreText;
+	//public Text TendText;
 	public Text NOHText;
-	public Text NODHText;
-	public Text NOMText;
+	public Text DurScoreText;
+	//public Text NOMText;
 	// Use this for initialization
 	void Start () {
 		TNBText.text = DrumController.TNBText.ToString ();
-		ATOText.text = DrumController.ATOText.ToString ();
-		TOVText.text = DrumController.TOVText.ToString ();
-		TendText.text = DrumController.TendText.ToString ();
+		OnsetScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
+		AvgScoreText.text = DrumController.AvgScoreText.ToString ("0.00");
+		//TendText.text = DrumController.TendText.ToString ();
 		NOHText.text = DrumController.NOHText.ToString ();
-		NODHText.text = DrumController.NODHText.ToString ();
-		NOMText.text = DrumController.NOMText.ToString ();
+		DurScoreText.text = DrumController.DurScoreText.ToString ("0.00");
+		//NOMText.text = DrumController.NOMText.ToString ();
 	}
 	
 	// Update is called once per frame

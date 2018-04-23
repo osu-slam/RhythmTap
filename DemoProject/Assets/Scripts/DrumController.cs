@@ -50,11 +50,11 @@ public class DrumController : MonoBehaviour {
 	float currentNoteLen = 0.0f;
 
 	public static int TNBText = 8;
-	public static float ATOText = 0.0f;
-	public static float TOVText = 0.0f;
+	public static float OnsetScoreText = 0.0f;
+	public static float AvgScoreText = 0.0f;
 	public static string TendText = "Early";
 	public static int NOHText = 0;
-	public static float NODHText = 0;
+	public static float DurScoreText = 0;
 	public static int NOMText = 0;
 
 	SpriteRenderer sr;
@@ -219,18 +219,24 @@ public class DrumController : MonoBehaviour {
 	void PerformanceAnalysis(){
 		int stdListIndex = 0; //index for stdDuration and stdList
 		int listIndex = 0; //index for duration and list
-		float score = 0.0f;
+		//float score = 0.0f;
+		int durationScore = 0;
 
 		while (stdListIndex < stdList.Count && listIndex < list.Count) {
 			float upper = stdList [stdListIndex] + error + 8 * beat;
 			float lower = stdList [stdListIndex] - error + 8 * beat;
 			if (list [listIndex] < upper && list [listIndex] > lower) {
-				float subScore = duration [listIndex] / (stdDuration [stdListIndex] - 2*drumHighlightBreak);
+				//update duration score
+				if (duration [listIndex] > (stdDuration [stdListIndex] - drumHighlightBreak) * 0.85f)
+					durationScore++;
+				/*float subScore = duration [listIndex] / (stdDuration [stdListIndex] - 2*drumHighlightBreak);
 				if (subScore >= 1)
 					subScore = 1;
-				score += subScore;
+				score += subScore;*/
 
+				//update onset accuracy score
 				numberOfHits++;
+				//increment
 				stdListIndex++;
 				listIndex++;
 			} else if (list [listIndex] > upper) {
@@ -241,7 +247,9 @@ public class DrumController : MonoBehaviour {
 		}
 
 		NOHText = numberOfHits;
-		TOVText = (float)((int)(score * 100)/TNBText);
+		OnsetScoreText = (float)(NOHText * 100) / TNBText;
+		DurScoreText = (float)(durationScore * 100) / TNBText;
+		AvgScoreText = (OnsetScoreText + DurScoreText) / 2.0f;
 		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
 		/*if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
 			totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
