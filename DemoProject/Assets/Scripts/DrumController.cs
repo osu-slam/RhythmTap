@@ -7,6 +7,7 @@ using Assets.Scripts;
 using Assets.Scripts.TextureStorage;
 
 public class DrumController : MonoBehaviour {
+	private const float NaN = 0.0f / 0;
 	public float bpm = 0f; //default
 
 	public AudioSource SingleStickSfx;
@@ -52,7 +53,7 @@ public class DrumController : MonoBehaviour {
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
 	public static float AvgScoreText = 0.0f;
-	public static string TendText = "Early";
+	public static int FAText = 0;
 	public static int NOHText = 0;
 	public static float DurScoreText = 0;
 	public static int NOMText = 0;
@@ -63,10 +64,14 @@ public class DrumController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sr = GetComponent<SpriteRenderer> ();
+		bpm = (float)MenuController.bpm;
+
+		if(MenuController.debug == false)
+			LogManager.Instance.LogSessionStart (bpm, MenuController.gameNum);
 
 		if (MenuController.impromptu == false) {
 			analyzed = false;
-			bpm = (float)MenuController.bpm;
+
 			//LogManager.Instance.LogSessionStart (bpm);
 
 			list = new List<float> ();
@@ -101,7 +106,6 @@ public class DrumController : MonoBehaviour {
 		} else {
 			countdownText.text = "";
 			lengthOfAudio = 60.0f;
-			bpm = (float)MenuController.bpm;
 			//LogManager.Instance.LogSessionStart (bpm);
 			launchTime = Time.timeSinceLevelLoad;
 			hasLaunched = false;
@@ -110,23 +114,6 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void StartAudio(){
-		/*switch (MenuController.gameNum) {
-		case 0:
-			game0Audio.Play ();
-			break;
-		case 1:
-			game1Audio.Play ();
-			break;
-		case 2:
-			game2Audio.Play ();
-			break;
-		case 3:
-			game3Audio.Play ();
-			break;
-		default:
-			game4Audio.Play ();
-			break;
-		}*/
 		RhythmSoundStorage.GetAudio (game0Audio);
 		game0Audio.Play ();
 	}
@@ -171,48 +158,18 @@ public class DrumController : MonoBehaviour {
 				UpdateKeyUp ();
 			else if (Input.GetKeyUp (KeyCode.P))
 				EndPlayingSession ();
-		}
 
-
-		/*if (!hasPlayed && hasLaunched) {
-			UpdateCountDownText ();
-
-			if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
-				hasPlayed = true;
-				StartPlayingSession ();
-			}
-
-			if (hasStarted && (Input.GetKeyDown (KeyCode.Space) && (Time.timeSinceLevelLoad - startTime) < (lengthOfAudio + beat*8))) {
-				UpdateKeyDown ();
-			}
-				
-			if (hasPlayed && ((numberOfHits + numberOfMisses) < TNBText)) {
-				if ((Time.timeSinceLevelLoad - startTime) > (stdList [stdIndex] + halfNotes[stdIndex])) {
-					stdIndex++; //passed;
-					numberOfMisses++;
-					countdownText.text = "Miss";
+			if (Input.touchCount > 0) {
+				switch(Input.GetTouch(0).phase){
+				case TouchPhase.Began:
+					UpdateKeyDown ();
+					break;
+				case TouchPhase.Ended:
+					UpdateKeyUp ();
+					break;
 				}
 			}
-				
-			if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + beat*8) {
-				EndPlayingSession ();
-			}
-		} else {
-			if (Input.GetKeyDown (KeyCode.Space) && !hasLaunched) {
-				hasLaunched = true;
-				launchTime = Time.timeSinceLevelLoad;
-				UpdateKeyDown ();
-				//SingleStickSfx.Play ();
-				//LogManager.Instance.Log ((Time.timeSinceLevelLoad - launchTime), stdIndex);
-			} else if ((Time.timeSinceLevelLoad - launchTime < lengthOfAudio) && (Input.GetKeyDown (KeyCode.Space))) { 
-				//play and log
-
-				SingleStickSfx.Play ();
-				LogManager.Instance.Log ((Time.timeSinceLevelLoad - launchTime), stdIndex);
-			} else if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio+beat*8) {
-				PromptMenu (); 
-			}
-		}*/
+		}
 	}
 
 	//analizing timestamps after finishing the song
@@ -226,8 +183,16 @@ public class DrumController : MonoBehaviour {
 			float upper = stdList [stdListIndex] + error + 8 * beat;
 			float lower = stdList [stdListIndex] - error + 8 * beat;
 			if (list [listIndex] < upper && list [listIndex] > lower) {
+				if (MenuController.debug == false) {
+					LogManager.Instance.Log (stdList [stdListIndex], 
+						list [listIndex] - (8 * beat), 
+						stdDuration [stdListIndex], 
+						duration [listIndex], 
+						stdListIndex);
+				}
+				
 				//update duration score
-				if (duration [listIndex] > (stdDuration [stdListIndex] - drumHighlightBreak) * 0.85f)
+				if (duration [listIndex] > stdDuration [stdListIndex] * 0.85f)
 					durationScore++;
 				/*float subScore = duration [listIndex] / (stdDuration [stdListIndex] - 2*drumHighlightBreak);
 				if (subScore >= 1)
@@ -240,16 +205,39 @@ public class DrumController : MonoBehaviour {
 				stdListIndex++;
 				listIndex++;
 			} else if (list [listIndex] > upper) {
+				//miss
+				if(MenuController.debug == false)
+					LogManager.Instance.Log (stdList [stdListIndex], NaN, stdDuration [stdListIndex], 0, stdListIndex);
 				stdListIndex++;
+				//NOMText++;
 			} else {
+				if(MenuController.debug == false)
+					LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, NaN, duration [listIndex], -1);
 				listIndex++;
+				FAText++;
 			}
 		}
 
+		//log remaining data
+		while (stdListIndex < stdList.Count) {
+			if(MenuController.debug == false)
+				LogManager.Instance.Log (stdList [stdListIndex], NaN, stdDuration [stdListIndex], 0, stdListIndex);
+			stdListIndex++;
+			//NOMText++;
+		}
+
+		while (listIndex < list.Count) {
+			if(MenuController.debug == false)
+				LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, NaN, duration [listIndex], -1);
+			listIndex++;
+			FAText++;
+		}
+
 		NOHText = numberOfHits;
+		NOMText = TNBText - NOHText;
 		OnsetScoreText = (float)(NOHText * 100) / TNBText;
 		DurScoreText = (float)(durationScore * 100) / TNBText;
-		AvgScoreText = (OnsetScoreText + DurScoreText) / 2.0f;
+		AvgScoreText = ((OnsetScoreText + DurScoreText) / 2.0f) - FAText;
 		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
 		/*if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
 			totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
@@ -276,14 +264,14 @@ public class DrumController : MonoBehaviour {
 		} else {
 			TendText = "Early";
 		}*/
-		/*
-		LogManager.Instance.Log("TotalNumberOfBeats", TNBText.ToString());
+
+		LogManager.Instance.Log("OnsetScore", OnsetScoreText.ToString());
+		LogManager.Instance.Log("DurationScore", DurScoreText.ToString());
+		LogManager.Instance.Log("AverageScore", AvgScoreText.ToString());
 		LogManager.Instance.Log("NumberOfHits", NOHText.ToString());
 		LogManager.Instance.Log("NumberOfMisses", NOMText.ToString());
-		LogManager.Instance.Log("NumberOfMis-Hits", NODHText.ToString());
-		LogManager.Instance.Log("AverageTimeOffsets", ATOText.ToString());
-		LogManager.Instance.Log("TimeOffsetsVariance", TOVText.ToString());
-		LogManager.Instance.Log("Tendency", TendText.ToString());*/
+		LogManager.Instance.Log("NumberOfFalseAlarms", FAText.ToString());
+		LogManager.Instance.Log("TotalNumberOfBeats", TNBText.ToString());
 
 	}
 
@@ -322,9 +310,10 @@ public class DrumController : MonoBehaviour {
 	void UpdateCountDownText(){
 		if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
 			countdownText.text = "";
-			hasStarted = true;
+			//hasStarted = true;
 		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
 			countdownText.text = "Go!";
+			hasStarted = true;
 		} else if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
 			countdownText.text = "1";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
@@ -350,45 +339,6 @@ public class DrumController : MonoBehaviour {
 
 		//play sound clip
 		SingleStickSfx.Play ();
-		/*if (hasPlayed) {
-
-			if ((Time.timeSinceLevelLoad - startTime) < (stdList [stdIndex] - halfBeat) || (stdIndex == (TNBText))) {
-				numberOfMisHits++;
-				countdownText.text = "Mis-Hit";
-			} else if ((numberOfHits + numberOfMisses) < TNBText) {
-				numberOfHits++;
-				totalOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
-				LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
-				if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
-					//earlier
-					if (stdIndex < (TNBText - 1)) {
-						totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
-						list.Add (Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]));
-						stdIndex++;
-					}
-					countdownText.text = "Hit";
-				} else {
-					//late
-					if (stdIndex < (TNBText - 1)) {
-						totalLateOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
-						list.Add (Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]));
-						stdIndex++;
-						countdownText.text = "Hit";
-					}
-				}
-
-
-			}
-		} else {
-			//deal with the first beat
-			if (numberOfHits == 0) {
-				numberOfHits++;
-				LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
-				totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - countDownTime - stdList [stdIndex]);
-				stdIndex++;
-				countdownText.text = "Hit";
-			}
-		}*/
 	}
 
 	void UpdateKeyUp(){

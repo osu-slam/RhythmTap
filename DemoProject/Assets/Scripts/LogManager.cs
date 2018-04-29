@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 
 public class LogManager {
-	/*
+	
     private static LogManager instance;
     internal static LogManager Instance
     {
@@ -36,6 +36,22 @@ public class LogManager {
         File.AppendAllText(path, contents);
     }
 
+	internal void Log(float eOnsetTime, float aOnsetTime, float eDuration, float aDuration, int index)
+	{
+		string contents = "";
+		if (index > -1)
+			contents += index.ToString ();
+
+		contents += "," + 
+			eOnsetTime.ToString() + "," +
+			aOnsetTime.ToString() + "," + 
+			(eOnsetTime - aOnsetTime).ToString() + "," +
+			eDuration.ToString() + "," +
+			aDuration.ToString() + "," +
+			(eDuration - aDuration).ToString() + "," + "\n";
+		File.AppendAllText(path, contents);
+	}
+
 	internal void Log(string arg1, string arg2,string arg3)
 	{
 		string contents = arg1 + "," + arg2 + "," + arg3 + "," + "\n";
@@ -47,10 +63,10 @@ public class LogManager {
 		string contents = arg1 + "," + arg2 + ","  + "\n";
 		File.AppendAllText(path, contents);
 	}
-*/
+
 
 	/* log the start Date */
-/*	internal void Log()
+	internal void Log()
 	{
 		string contents = DateTime.Now +"\n";
 		File.AppendAllText(path, contents);
@@ -73,13 +89,18 @@ public class LogManager {
         MP3PERSONAL,
         YOUTUBE,
     }
-    internal void LogSessionStart(float bpm)
+	internal void LogSessionStart(float bpm, int gameNum)
     {
         Log("Session", "Start", DateTime.Now.ToString());
+		Log ("Game Number", gameNum.ToString());
+		Log("BPM", bpm.ToString("f4"));
+		Log ("Onset Error", '\u00B1' + " 0.1");
+		Log ("Duration Threshold", "0.85");
+		Log ("Response Lag", "0.15");
+		Log ("Index", "Onset_Expected, Onset_Actual, Onset_Diff", "Dur_Expected, Dur_Actual, Dur_Diff");
         //Log("Session", new string[] { "Song", title, type.ToString()});
        // Log("Session", "Difficulty", difficulty.ToString());
         //Log("Session", "Drums", drums.ToString());
-        Log("BPM", bpm.ToString("f4"));
         //Log("Session", "TimeSignature", timeSignature);
-    }*/
+    }
 }

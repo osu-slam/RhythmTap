@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour {
 	public static float bpm = 85;
 	public static bool impromptu;
 	public static int gameNum;
+	public static bool debug = false;
 
 	public AudioClip[] rhythm0audioClips;
 	public AudioClip[] rhythm1audioClips;
@@ -138,6 +139,9 @@ public class MenuController : MonoBehaviour {
 		SceneManager.LoadScene("Menu");
 	}
 
+	public void EnableDebug(){
+		debug = true;
+	}
 
 	public void onValueChanged(){
 
