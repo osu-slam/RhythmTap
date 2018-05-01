@@ -19,7 +19,7 @@ public class DrumController : MonoBehaviour {
 	bool analyzed = false;
 
 
-	float variance;
+	//float variance;
 	public List<float> list;
 	public List<float> stdList;
 	public List<float> halfNotes;
@@ -35,20 +35,20 @@ public class DrumController : MonoBehaviour {
 
 
 	int numberOfHits = 0;
-	int numberOfMisses = 0;
-	int numberOfMisHits = 0;
+	//int numberOfMisses = 0;
+	//int numberOfMisHits = 0;
 	static float lengthOfAudio;
 
-	float totalPriorOff = 0;
-	float totalLateOff = 0;
-	float totalOff = 0;
+	//float totalPriorOff = 0;
+	//float totalLateOff = 0;
+	//float totalOff = 0;
 	float countDownTime;
 
 	float error = 0.1f;
 	float beat = 0;
-	int stdIndex = 0;
+	//int stdIndex = 0;
 	float drumHighlightBreak = 0.05f;
-	float currentNoteLen = 0.0f;
+	//float currentNoteLen = 0.0f;
 
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
@@ -59,10 +59,15 @@ public class DrumController : MonoBehaviour {
 	public static int NOMText = 0;
 
 	SpriteRenderer sr;
+	private static EndScreenController endScreenController;
+	private float endScreenTime;
 	int i = 0;
 
 	// Use this for initialization
 	void Start () {
+		endScreenController = new EndScreenController ();
+		endScreenController.Disable ();
+		endScreenTime = 0.0f;
 		sr = GetComponent<SpriteRenderer> ();
 		bpm = (float)MenuController.bpm;
 
@@ -94,11 +99,18 @@ public class DrumController : MonoBehaviour {
 			hasLaunched = false;
 			hasStarted = false;
 			hasPlayed = false;
-			numberOfMisHits = 0;
-			numberOfMisses = 0;
+			//numberOfMisHits = 0;
+			//numberOfMisses = 0;
 			numberOfHits = 0;
-			stdIndex = 0;
-			variance = 0.0f;
+			//stdIndex = 0;
+			//variance = 0.0f;
+
+			OnsetScoreText = 0.0f;
+			AvgScoreText = 0.0f;
+			FAText = 0;
+			NOHText = 0;
+			DurScoreText = 0;
+			NOMText = 0;
 
 			countDownTime = 0.0f;
 			launchTime = Time.timeSinceLevelLoad;
@@ -133,22 +145,24 @@ public class DrumController : MonoBehaviour {
 		if (Time.timeSinceLevelLoad - launchTime > 2*beat && !hasLaunched) {
 			StartCountDown (); //hasLaunched = true
 		}
-		if (!hasPlayed && hasLaunched) {
-			UpdateCountDownText (); //hasStarted = true
 
-			if (Time.timeSinceLevelLoad - countDownTime > 8 * beat) {
-				hasPlayed = true;
-				StartPlayingSession (); //set startTime
-			}
-			if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + beat * 8) {
-				EndPlayingSession (); //hasEnded = true
-			}
-		} else {
-			if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + beat * 9) {
-				EndPlayingSession (); //hasEnded = true
+		if (!hasEnded) {
+			if (!hasPlayed && hasLaunched) {
+				UpdateCountDownText (); //hasStarted = true
+
+				if (Time.timeSinceLevelLoad - countDownTime > 8 * beat) {
+					hasPlayed = true;
+					StartPlayingSession (); //set startTime
+				}
+				if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + beat * 8) {
+					EndPlayingSession (); //hasEnded = true
+				}
+			} else {
+				if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + beat * 8) {
+					EndPlayingSession (); //hasEnded = true
+				}
 			}
 		}
-
 		UpdateDrumHighlight ();
 
 		if (hasStarted && !hasEnded) {
@@ -167,6 +181,17 @@ public class DrumController : MonoBehaviour {
 				case TouchPhase.Ended:
 					UpdateKeyUp ();
 					break;
+				}
+			}
+		}
+
+		//float temp = Time.timeSinceLevelLoad;
+		if (hasEnded){
+			if (endScreenTime > 0.0f) {
+				float temp = Time.timeSinceLevelLoad;
+				float diff = temp - endScreenTime;
+				if (diff > 1.0f) {
+					LoadAnalysis ();
 				}
 			}
 		}
@@ -264,15 +289,15 @@ public class DrumController : MonoBehaviour {
 		} else {
 			TendText = "Early";
 		}*/
-
-		LogManager.Instance.Log("OnsetScore", OnsetScoreText.ToString());
-		LogManager.Instance.Log("DurationScore", DurScoreText.ToString());
-		LogManager.Instance.Log("AverageScore", AvgScoreText.ToString());
-		LogManager.Instance.Log("NumberOfHits", NOHText.ToString());
-		LogManager.Instance.Log("NumberOfMisses", NOMText.ToString());
-		LogManager.Instance.Log("NumberOfFalseAlarms", FAText.ToString());
-		LogManager.Instance.Log("TotalNumberOfBeats", TNBText.ToString());
-
+		if (MenuController.debug == false) {
+			LogManager.Instance.Log ("OnsetScore", OnsetScoreText.ToString ());
+			LogManager.Instance.Log ("DurationScore", DurScoreText.ToString ());
+			LogManager.Instance.Log ("AverageScore", AvgScoreText.ToString ());
+			LogManager.Instance.Log ("NumberOfHits", NOHText.ToString ());
+			LogManager.Instance.Log ("NumberOfMisses", NOMText.ToString ());
+			LogManager.Instance.Log ("NumberOfFalseAlarms", FAText.ToString ());
+			LogManager.Instance.Log ("TotalNumberOfBeats", TNBText.ToString ());
+		}
 	}
 
 	void StartCountDown(){
@@ -347,6 +372,10 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void EndPlayingSession(){
+		hasEnded = true;
+		endScreenController.Enable();
+		endScreenTime = Time.timeSinceLevelLoad;
+		//GUI.DrawTexture (new Rect(0, 0, Screen.width, Screen.height), endScreen);
 		if (Input.GetKey (KeyCode.Space)) {
 			UpdateKeyUp ();
 		}
@@ -354,10 +383,11 @@ public class DrumController : MonoBehaviour {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}
-		//PromptMenu ();
-		//if (Input.GetKeyDown (KeyCode.P)) {
-			SceneManager.LoadScene ("Analysis");
-		//}
+		//LoadAnalysis ();
+	}
+
+	void LoadAnalysis(){
+		SceneManager.LoadScene ("Analysis");
 	}
 
 	void PromptMenu(){

@@ -54,6 +54,7 @@
      <Compile Include="Assets\DropDownEffect.cs" />
      <Compile Include="Assets\MainSceneScript.cs" />
      <Compile Include="Assets\Scripts\DrumController.cs" />
+     <Compile Include="Assets\Scripts\EndScreenController.cs" />
      <Compile Include="Assets\Scripts\LogManager.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
      <Compile Include="Assets\Scripts\MusicElement.cs" />
