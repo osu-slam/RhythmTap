@@ -202,7 +202,7 @@ public class DrumController : MonoBehaviour {
 		int stdListIndex = 0; //index for stdDuration and stdList
 		int listIndex = 0; //index for duration and list
 		//float score = 0.0f;
-		int durationScore = 0;
+		float durationScore = 0.0f;
 
 		while (stdListIndex < stdList.Count && listIndex < list.Count) {
 			float upper = stdList [stdListIndex] + error + 8 * beat;
@@ -217,12 +217,13 @@ public class DrumController : MonoBehaviour {
 				}
 				
 				//update duration score
-				if (duration [listIndex] > stdDuration [stdListIndex] * 0.85f)
-					durationScore++;
-				/*float subScore = duration [listIndex] / (stdDuration [stdListIndex] - 2*drumHighlightBreak);
-				if (subScore >= 1)
-					subScore = 1;
-				score += subScore;*/
+				//if (duration [listIndex] > stdDuration [stdListIndex] * 0.85f)
+				//	durationScore++;
+
+				float durSubscore = duration [listIndex] / stdDuration [stdListIndex];
+				if (durSubscore > 1.0f)
+					durSubscore = 0.94f;
+				durationScore += durSubscore;
 
 				//update onset accuracy score
 				numberOfHits++;
@@ -261,7 +262,7 @@ public class DrumController : MonoBehaviour {
 		NOHText = numberOfHits;
 		NOMText = TNBText - NOHText;
 		OnsetScoreText = (float)(NOHText * 100) / TNBText;
-		DurScoreText = (float)(durationScore * 100) / TNBText;
+		DurScoreText = (durationScore * 100) / NOHText;
 		AvgScoreText = ((OnsetScoreText + DurScoreText) / 2.0f) - FAText;
 		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
 		/*if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
