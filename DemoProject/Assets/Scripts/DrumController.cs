@@ -24,7 +24,6 @@ public class DrumController : MonoBehaviour {
 	public List<float> stdList;
 	public List<float> halfNotes;
 	private List<float> stdDuration;
-	private List<float> duration;
 	bool hasStarted = false;
 	bool hasEnded = false;
 	bool hasLaunched = false;
@@ -35,20 +34,13 @@ public class DrumController : MonoBehaviour {
 
 
 	int numberOfHits = 0;
-	//int numberOfMisses = 0;
-	//int numberOfMisHits = 0;
 	static float lengthOfAudio;
 
-	//float totalPriorOff = 0;
-	//float totalLateOff = 0;
-	//float totalOff = 0;
 	float countDownTime;
 
 	float error = 0.1f;
 	float beat = 0;
-	//int stdIndex = 0;
 	float drumHighlightBreak = 0.05f;
-	//float currentNoteLen = 0.0f;
 
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
@@ -57,6 +49,8 @@ public class DrumController : MonoBehaviour {
 	public static int NOHText = 0;
 	public static float DurScoreText = 0;
 	public static int NOMText = 0;
+	public static int LessText = 0;
+	public static int MoreText = 0;
 
 	SpriteRenderer sr;
 	private static EndScreenController endScreenController;
@@ -85,12 +79,11 @@ public class DrumController : MonoBehaviour {
 			beat = 60.0f/bpm;
 
 			stdList = new List<float> ();
-			duration = new List<float> ();
+
             /* Testing */
             RhythmLoader rhythmLoader = new RhythmLoader();
 			rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
 			stdList = rhythmLoader.GetRhythmTimes ();
-			halfNotes = rhythmLoader.GetHalfNoteDurations ((int)bpm);
 			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
 			TNBText = stdList.Count;
 
@@ -99,11 +92,7 @@ public class DrumController : MonoBehaviour {
 			hasLaunched = false;
 			hasStarted = false;
 			hasPlayed = false;
-			//numberOfMisHits = 0;
-			//numberOfMisses = 0;
 			numberOfHits = 0;
-			//stdIndex = 0;
-			//variance = 0.0f;
 
 			OnsetScoreText = 0.0f;
 			AvgScoreText = 0.0f;
@@ -111,6 +100,8 @@ public class DrumController : MonoBehaviour {
 			NOHText = 0;
 			DurScoreText = 0;
 			NOMText = 0;
+			MoreText = 0;
+			LessText = 0;
 
 			countDownTime = 0.0f;
 			launchTime = Time.timeSinceLevelLoad;
@@ -168,8 +159,6 @@ public class DrumController : MonoBehaviour {
 		if (hasStarted && !hasEnded) {
 			if (Input.GetKeyDown (KeyCode.Space))
 				UpdateKeyDown ();
-			else if (Input.GetKeyUp (KeyCode.Space))
-				UpdateKeyUp ();
 			else if (Input.GetKeyUp (KeyCode.P))
 				EndPlayingSession ();
 
@@ -178,14 +167,10 @@ public class DrumController : MonoBehaviour {
 				case TouchPhase.Began:
 					UpdateKeyDown ();
 					break;
-				case TouchPhase.Ended:
-					UpdateKeyUp ();
-					break;
 				}
 			}
 		}
 
-		//float temp = Time.timeSinceLevelLoad;
 		if (hasEnded){
 			if (endScreenTime > 0.0f) {
 				float temp = Time.timeSinceLevelLoad;
@@ -199,10 +184,8 @@ public class DrumController : MonoBehaviour {
 
 	//analizing timestamps after finishing the song
 	void PerformanceAnalysis(){
-		int stdListIndex = 0; //index for stdDuration and stdList
-		int listIndex = 0; //index for duration and list
-		//float score = 0.0f;
-		float durationScore = 0.0f;
+		int stdListIndex = 0; //index for stdList
+		int listIndex = 0; //index for list
 
 		while (stdListIndex < stdList.Count && listIndex < list.Count) {
 			float upper = stdList [stdListIndex] + error + 8 * beat;
@@ -211,19 +194,10 @@ public class DrumController : MonoBehaviour {
 				if (MenuController.debug == false) {
 					LogManager.Instance.Log (stdList [stdListIndex], 
 						list [listIndex] - (8 * beat), 
-						stdDuration [stdListIndex], 
-						duration [listIndex], 
+						//stdDuration [stdListIndex], 
+						//duration [listIndex], 
 						stdListIndex);
 				}
-				
-				//update duration score
-				//if (duration [listIndex] > stdDuration [stdListIndex] * 0.85f)
-				//	durationScore++;
-
-				float durSubscore = duration [listIndex] / stdDuration [stdListIndex];
-				if (durSubscore > 1.0f)
-					durSubscore = 0.94f;
-				durationScore += durSubscore;
 
 				//update onset accuracy score
 				numberOfHits++;
@@ -233,12 +207,11 @@ public class DrumController : MonoBehaviour {
 			} else if (list [listIndex] > upper) {
 				//miss
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (stdList [stdListIndex], NaN, stdDuration [stdListIndex], 0, stdListIndex);
+					LogManager.Instance.Log (stdList [stdListIndex], NaN, /*stdDuration [stdListIndex], 0,*/ stdListIndex);
 				stdListIndex++;
-				//NOMText++;
 			} else {
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, NaN, duration [listIndex], -1);
+					LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, /*NaN, duration [listIndex],*/ -1);
 				listIndex++;
 				FAText++;
 			}
@@ -247,14 +220,13 @@ public class DrumController : MonoBehaviour {
 		//log remaining data
 		while (stdListIndex < stdList.Count) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (stdList [stdListIndex], NaN, stdDuration [stdListIndex], 0, stdListIndex);
+				LogManager.Instance.Log (stdList [stdListIndex], NaN, /*stdDuration [stdListIndex], 0,*/ stdListIndex);
 			stdListIndex++;
-			//NOMText++;
 		}
 
 		while (listIndex < list.Count) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, NaN, duration [listIndex], -1);
+				LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat,/* NaN, duration [listIndex],*/ -1);
 			listIndex++;
 			FAText++;
 		}
@@ -262,42 +234,20 @@ public class DrumController : MonoBehaviour {
 		NOHText = numberOfHits;
 		NOMText = TNBText - NOHText;
 		OnsetScoreText = (float)(NOHText * 100) / TNBText;
-		DurScoreText = (durationScore * 100) / NOHText;
-		AvgScoreText = ((OnsetScoreText + DurScoreText) / 2.0f) - FAText;
-		//LogManager.Instance.Log ((Time.timeSinceLevelLoad - startTime), stdIndex);
-		/*if ((Time.timeSinceLevelLoad - startTime) < stdList [stdIndex]) {
-			totalPriorOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
-		} else {
-			totalLateOff += Mathf.Abs (Time.timeSinceLevelLoad - startTime - stdList [stdIndex]);
-		}
-		//set strings
-		ATOText = (totalPriorOff + totalLateOff) / (float)numberOfHits;
-		for (int i = 0; i < list.Count; i++) {
-			variance += Mathf.Abs (list [i] - ATOText);
-		}
-		variance /= numberOfHits;
-		NOMText = numberOfMisses;
+		//AvgScoreText = ((OnsetScoreText + DurScoreText) / 2.0f) - FAText;
 
-		TOVText = variance;
-		NODHText = numberOfMisHits;
-
-
-		NOHText = numberOfHits;
-
-
-		if (totalLateOff > totalPriorOff) {
-			TendText = "Late";
-		} else {
-			TendText = "Early";
-		}*/
 		if (MenuController.debug == false) {
+			//LogManager.Instance.Log ("AverageScore", AvgScoreText.ToString ());
+
 			LogManager.Instance.Log ("OnsetScore", OnsetScoreText.ToString ());
-			LogManager.Instance.Log ("DurationScore", DurScoreText.ToString ());
-			LogManager.Instance.Log ("AverageScore", AvgScoreText.ToString ());
 			LogManager.Instance.Log ("NumberOfHits", NOHText.ToString ());
 			LogManager.Instance.Log ("NumberOfMisses", NOMText.ToString ());
 			LogManager.Instance.Log ("NumberOfFalseAlarms", FAText.ToString ());
 			LogManager.Instance.Log ("TotalNumberOfBeats", TNBText.ToString ());
+
+			//LogManager.Instance.Log ("DurationScore", DurScoreText.ToString ());
+			//LogManager.Instance.Log ("> ExpDuration", MoreText.ToString ());
+			//LogManager.Instance.Log ("<= ExpDuration", LessText.ToString ());
 		}
 	}
 
@@ -317,8 +267,6 @@ public class DrumController : MonoBehaviour {
 	}
 
 	bool HighlightDrum(float time, float duration){
-		//float upperBound = time + 0.25f;
-		//float lowerBound = time + 0.05f;
 		float upperBound = time + duration - drumHighlightBreak;
 		float lowerBound = time + 0.05f;
 		if (Time.timeSinceLevelLoad > lowerBound && Time.timeSinceLevelLoad < upperBound) {
@@ -336,7 +284,6 @@ public class DrumController : MonoBehaviour {
 	void UpdateCountDownText(){
 		if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
 			countdownText.text = "";
-			//hasStarted = true;
 		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
 			countdownText.text = "Go!";
 			hasStarted = true;
@@ -352,39 +299,26 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void StartPlayingSession(){
-		//rhythm.Stop();
-		//halfBeat = 0.50f; // TODO
 		startTime = Time.timeSinceLevelLoad;
-		//rhythm.Play();
 	}
 
 	void UpdateKeyDown(){
 		//add timestamp to the list
 		list.Add (Time.timeSinceLevelLoad);
-		duration.Add (Time.timeSinceLevelLoad);
 
 		//play sound clip
 		SingleStickSfx.Play ();
-	}
-
-	void UpdateKeyUp(){
-		if(duration.Count > 0)
-			duration[duration.Count - 1] = Time.timeSinceLevelLoad - duration [duration.Count - 1];
 	}
 
 	void EndPlayingSession(){
 		hasEnded = true;
 		endScreenController.Enable();
 		endScreenTime = Time.timeSinceLevelLoad;
-		//GUI.DrawTexture (new Rect(0, 0, Screen.width, Screen.height), endScreen);
-		if (Input.GetKey (KeyCode.Space)) {
-			UpdateKeyUp ();
-		}
+
 		if (analyzed == false) {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}
-		//LoadAnalysis ();
 	}
 
 	void LoadAnalysis(){

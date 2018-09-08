@@ -15,7 +15,8 @@ namespace Assets.Scripts.TextureStorage
 			"im-hun-gry", 
 			"what-is-your-name", 
 			"i-am-thir-sty",
-			"i-want-to-sing"
+			"i-want-to-sing",
+			"isochronous"
 		};
 
         public static XmlDocument GetRhythm()

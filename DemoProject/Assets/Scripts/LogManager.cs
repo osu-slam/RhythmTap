@@ -36,7 +36,7 @@ public class LogManager {
         File.AppendAllText(path, contents);
     }
 
-	internal void Log(float eOnsetTime, float aOnsetTime, float eDuration, float aDuration, int index)
+	internal void Log(float eOnsetTime, float aOnsetTime,/* float eDuration, float aDuration,*/ int index)
 	{
 		string contents = "";
 		if (index > -1)
@@ -46,9 +46,9 @@ public class LogManager {
 			eOnsetTime.ToString() + "," +
 			aOnsetTime.ToString() + "," + 
 			(eOnsetTime - aOnsetTime).ToString() + "," +
-			eDuration.ToString() + "," +
+			/*eDuration.ToString() + "," +
 			aDuration.ToString() + "," +
-			(eDuration - aDuration).ToString() + "," + "\n";
+			(eDuration - aDuration).ToString() + "," + */"\n";
 		File.AppendAllText(path, contents);
 	}
 

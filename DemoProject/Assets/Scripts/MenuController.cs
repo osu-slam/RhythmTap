@@ -6,23 +6,25 @@ using UnityEngine.UI;
 using System.Xml;
 
 public class MenuController : MonoBehaviour {
-	public static float bpm = 85;
+	public static float bpm = 55;
 	public static bool impromptu;
 	public static int gameNum;
 	public static bool debug = false;
 
 	public AudioClip[] rhythm0audioClips;
-	public AudioClip[] rhythm1audioClips;
-	public AudioClip[] rhythm2audioClips;
+	//public AudioClip[] rhythm1audioClips;
+	//public AudioClip[] rhythm2audioClips;
 	public AudioClip[] rhythm3audioClips;
 	public AudioClip[] rhythm4audioClips;
+	public AudioClip[] rhythm5audioClips;
 
 	public Text Username_field;
 	public Dropdown dp0;
-	public Dropdown dp1;
-	public Dropdown dp2;
+	//public Dropdown dp1;
+	//public Dropdown dp2;
 	public Dropdown dp3;
 	public Dropdown dp4;
+	public Dropdown dp5;
 	public static AudioClip audioClip;
 
 	// Use this for initialization
@@ -39,20 +41,20 @@ public class MenuController : MonoBehaviour {
 
 		switch (dp0.value) {
 		case 0:
-			bpm = 65;
+			bpm = 55;
 			break;
 		case 1:
-			bpm = 75;
+			bpm = 65;
 			break;
 		default:
-			bpm = 85;
+			bpm = 75;
 			break;
 		}
 		impromptu = false;
 		audioClip = rhythm0audioClips [dp0.value];
 		SceneManager.LoadScene("MainScene");
 	}
-	public void StartGame1(){
+	/*public void StartGame1(){
 		gameNum = 1;
 		switch (dp1.value) {
 		case 0:
@@ -85,18 +87,18 @@ public class MenuController : MonoBehaviour {
 		impromptu = false;
 		audioClip = rhythm2audioClips [dp2.value];
 		SceneManager.LoadScene("MainScene");
-	}
+	}*/
 	public void StartGame3(){
 		gameNum = 3;
 		switch (dp3.value) {
 		case 0:
-			bpm = 65;
+			bpm = 55;
 			break;
 		case 1:
-			bpm = 75;
+			bpm = 65;
 			break;
 		default:
-			bpm = 85;
+			bpm = 75;
 			break;
 		}
 		impromptu = false;
@@ -107,13 +109,13 @@ public class MenuController : MonoBehaviour {
 		gameNum = 4;
 		switch (dp4.value) {
 		case 0:
-			bpm = 65;
+			bpm = 55;
 			break;
 		case 1:
-			bpm = 75;
+			bpm = 65;
 			break;
 		default:
-			bpm = 85;
+			bpm = 75;
 			break;
 		}
         impromptu = false;
@@ -121,6 +123,24 @@ public class MenuController : MonoBehaviour {
         SceneManager.LoadScene("MainScene");
 
     }
+
+	public void StartGame5(){
+		gameNum = 5;
+		switch (dp5.value) {
+		case 0:
+			bpm = 55;
+			break;
+		case 1:
+			bpm = 65;
+			break;
+		default:
+			bpm = 75;
+			break;
+		}
+		impromptu = false;
+		audioClip = rhythm5audioClips [dp5.value];
+		SceneManager.LoadScene("MainScene");
+	}
 
     public void QuitGame(){
 		Application.Quit();
