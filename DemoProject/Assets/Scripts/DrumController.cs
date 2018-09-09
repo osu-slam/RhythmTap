@@ -10,6 +10,8 @@ public class DrumController : MonoBehaviour {
 	private const float NaN = 0.0f / 0;
 	public float bpm = 0f; //default
 
+	public AudioSource Clave;
+	public AudioSource WoodBlock;
 	public AudioSource SingleStickSfx;
     public AudioSource game0Audio;
 
@@ -32,6 +34,7 @@ public class DrumController : MonoBehaviour {
 	float startTime = 0.0f;
 	float launchTime = 0.0f;
 
+	float nextMetronomeBeat;
 
 	int numberOfHits = 0;
 	static float lengthOfAudio;
@@ -56,6 +59,8 @@ public class DrumController : MonoBehaviour {
 	private static EndScreenController endScreenController;
 	private float endScreenTime;
 	int i = 0;
+	int j = 0;
+	int totalBeats;
 
 	// Use this for initialization
 	void Start () {
@@ -77,6 +82,8 @@ public class DrumController : MonoBehaviour {
 			//Set total num of beats based on current bpm selected;
 			lengthOfAudio = 60.0f;//in seconds
 			beat = 60.0f/bpm;
+			nextMetronomeBeat = (float)(AudioSettings.dspTime + beat);
+			totalBeats = (int)(bpm / 4) * 4 + 8;
 
 			stdList = new List<float> ();
 
@@ -113,7 +120,9 @@ public class DrumController : MonoBehaviour {
 			launchTime = Time.timeSinceLevelLoad;
 			hasLaunched = false;
 		}
-		StartAudio ();
+		//StartAudio ();
+		Clave.Play();
+		totalBeats--;
 	}
 
 	void StartAudio(){
@@ -128,6 +137,13 @@ public class DrumController : MonoBehaviour {
 		}
 
 		if (MenuController.impromptu == false) {
+
+			if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
+			{
+				Clave.Play();
+				nextMetronomeBeat += beat;
+			}
+
 			UpdateRegularPlayMode ();
 		}
 	}
@@ -155,6 +171,7 @@ public class DrumController : MonoBehaviour {
 			}
 		}
 		UpdateDrumHighlight ();
+		UpdateDrumPrompt ();
 
 		if (hasStarted && !hasEnded) {
 			if (Input.GetKeyDown (KeyCode.Space))
@@ -263,6 +280,13 @@ public class DrumController : MonoBehaviour {
 			time = stdList [i] + 8 * beat;
 			if (!HighlightDrum (time, stdDuration[i]))
 				i++;
+		}
+	}
+
+	void UpdateDrumPrompt(){
+		if (j < stdList.Count && Time.timeSinceLevelLoad > stdList[j] + 8 * beat - drumHighlightBreak) {
+			WoodBlock.Play ();
+			j++;
 		}
 	}
 
