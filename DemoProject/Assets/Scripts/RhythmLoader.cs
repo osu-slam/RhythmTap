@@ -9,34 +9,68 @@ namespace Assets.Scripts
 {
     class RhythmLoader
     {
-        XmlDocument doc;
         List<MusicElement> musicElements;
 		List<float> times;
+		float msRhythmDuration;
+		float msTimeLim;
+		float bpm;
+
         public RhythmLoader()
         {
             musicElements = new List<MusicElement>();
 			times = new List<float> ();
+			msRhythmDuration = 0.0f;
+			msTimeLim = 0.0f;
+			bpm = 0.0f;
         }
 
-        public void LoadRhythm(XmlDocument xml)
+		public void LoadRhythm(String input, float bpm, float timeLimit)
         {
-            doc = xml;
-            Load();
+			this.bpm = bpm;
+			Parse (input);
+			msTimeLim = timeLimit;
         }
 
-        private void Load()
-        {
-            XmlNodeList elements = doc.GetElementsByTagName("element");
-            foreach (XmlNode element in elements)
-            {
-                string type = element["type"].InnerText;
-                int duration = Convert.ToInt32(element["time"].InnerText);
-                musicElements.Add(new MusicElement(type, duration));
-				times.Add ((float)duration/1000);
-            }
-        }
+		private void Parse(String input){
+			String[] elements = input.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+			for(int i = 0; i < elements.Length; i++)
+			{
+				switch (elements[i])
+				{
+				case "4n":
+					musicElements.Add(new MusicElement("Quarter_Note"));
+					break;
+				case "8n":
+					musicElements.Add(new MusicElement("Eighth_Note"));
+					break;
+				case "8tn":
+					musicElements.Add(new MusicElement("Eighth_Note_T"));
+					break;
+				case "4r":
+					musicElements.Add(new MusicElement("Quarter_Rest"));
+					break;
+				case "8r":
+					musicElements.Add(new MusicElement("Eighth_Rest"));
+					break;
+				default:
+					return;
+				}
+
+				msRhythmDuration += musicElements.Last ().GetNoteDuration ((int)bpm);
+			}
+		}
+			
 
 		public List<float> GetRhythmTimes(){
+			float time = 0.0f;
+			int numCycles = (int) (msTimeLim / msRhythmDuration) + 2;
+			for (int i = 0; i < numCycles; i++) {
+				foreach (MusicElement me in musicElements) {
+					if (!me.IsRest ())
+						times.Add (time);
+					time += me.GetNoteDuration ((int)bpm);
+				}
+			}
 			return times;
 		}
 
@@ -50,9 +84,16 @@ namespace Assets.Scripts
 
 		public List<float> GetNoteDurations(int bpm){
 			List<float> durations = new List<float> ();
-			foreach (MusicElement me in musicElements) {
-				durations.Add(me.GetNoteDuration(bpm));
+
+			int numCycles = (int) (msTimeLim / msRhythmDuration) + 2;
+			for (int i = 0; i < numCycles; i++)
+			{
+				foreach (MusicElement me in musicElements) {
+					if(!me.IsRest())
+						durations.Add(me.GetNoteDuration(bpm));
+				}
 			}
+
 			return durations;
 		}
     }

@@ -89,7 +89,7 @@ public class DrumController : MonoBehaviour {
 
             /* Testing */
             RhythmLoader rhythmLoader = new RhythmLoader();
-			rhythmLoader.LoadRhythm(RhythmDataStorage.GetRhythm());
+			rhythmLoader.LoadRhythm(MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
 			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
 			TNBText = stdList.Count;
@@ -284,7 +284,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateDrumPrompt(){
-		if (j < stdList.Count && Time.timeSinceLevelLoad > stdList[j] + 8 * beat - drumHighlightBreak) {
+		if (j < stdList.Count && Time.timeSinceLevelLoad > stdList[j] + 8 * beat) {
 			WoodBlock.Play ();
 			j++;
 		}

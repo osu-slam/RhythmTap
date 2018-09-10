@@ -27,6 +27,8 @@ public class MenuController : MonoBehaviour {
 	public Dropdown dp5;
 	public static AudioClip audioClip;
 
+	public static string rhythm = "";
+
 	// Use this for initialization
 	void Start () {
 		bpm = 30;
@@ -38,7 +40,7 @@ public class MenuController : MonoBehaviour {
 	}
 	public void StartGame0(){
 		gameNum = 0;
-
+		rhythm = "8n 8n 4n 4r 4r";
 		switch (dp0.value) {
 		case 0:
 			bpm = 55;
@@ -54,41 +56,8 @@ public class MenuController : MonoBehaviour {
 		audioClip = rhythm0audioClips [dp0.value];
 		SceneManager.LoadScene("MainScene");
 	}
-	/*public void StartGame1(){
-		gameNum = 1;
-		switch (dp1.value) {
-		case 0:
-			bpm = 65;
-			break;
-		case 1:
-			bpm = 75;
-			break;
-		default:
-			bpm = 85;
-			break;
-		}
-		impromptu = false;
-		audioClip = rhythm1audioClips [dp1.value];
-		SceneManager.LoadScene("MainScene");
-	}
-	public void StartGame2(){
-		gameNum = 2;
-		switch (dp2.value) {
-		case 0:
-			bpm = 65;
-			break;
-		case 1:
-			bpm = 75;
-			break;
-		default:
-			bpm = 85;
-			break;
-		}
-		impromptu = false;
-		audioClip = rhythm2audioClips [dp2.value];
-		SceneManager.LoadScene("MainScene");
-	}*/
 	public void StartGame3(){
+		rhythm = "4n 4n 8n 8n 4r";
 		gameNum = 3;
 		switch (dp3.value) {
 		case 0:
@@ -106,6 +75,7 @@ public class MenuController : MonoBehaviour {
 		SceneManager.LoadScene("MainScene");
 	}
     public void StartGame4(){
+		rhythm = "4n 8n 8n 4n 4r";
 		gameNum = 4;
 		switch (dp4.value) {
 		case 0:
@@ -125,6 +95,7 @@ public class MenuController : MonoBehaviour {
     }
 
 	public void StartGame5(){
+		rhythm = "4n 4n 4n 4r";
 		gameNum = 5;
 		switch (dp5.value) {
 		case 0:

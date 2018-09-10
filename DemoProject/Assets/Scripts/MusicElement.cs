@@ -7,20 +7,28 @@ namespace Assets.Scripts
 {
     class MusicElement
     {
-		private enum ElementType {Quarter_Note, Eighth_Note, Eighth_Note_T};
+		private enum ElementType {Quarter_Note, Eighth_Note, Eighth_Note_T, Quarter_Rest, Eighth_Rest};
         private ElementType EleType { get; set; }
-        public int MsDuration { get; set; }
+		private bool isRest;
 
-        public MusicElement(string type, int msDuration)
+        public MusicElement(string type)
         {
             if (type.Equals(ElementType.Quarter_Note.ToString())) {
                 EleType = ElementType.Quarter_Note;
+				isRest = false;
 			} else if (type.Equals(ElementType.Eighth_Note_T.ToString())){
 				EleType = ElementType.Eighth_Note_T;
+				isRest = false;
+			} else if (type.Equals(ElementType.Eighth_Note.ToString())){
+				EleType = ElementType.Eighth_Note;
+				isRest = false;
+			} else if (type.Equals(ElementType.Quarter_Rest.ToString())){
+				EleType = ElementType.Quarter_Rest;
+				isRest = true;
 			} else {
-                EleType = ElementType.Eighth_Note;
-            }
-            MsDuration = msDuration;
+				EleType = ElementType.Eighth_Rest;
+				isRest = true;
+			}
         }
 
 		public float GetNoteDuration(int bpm){
@@ -35,6 +43,11 @@ namespace Assets.Scripts
 					break;
 			}
 			return noteDuration;
+		}
+
+		public bool IsRest()
+		{
+			return isRest;
 		}
     }
 }
