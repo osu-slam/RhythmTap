@@ -63,7 +63,7 @@ namespace Assets.Scripts
 
 		public List<float> GetRhythmTimes(){
 			float time = 0.0f;
-			int numCycles = (int) (msTimeLim / msRhythmDuration) + 2;
+			int numCycles = (int) (msTimeLim / msRhythmDuration) + 8;
 			for (int i = 0; i < numCycles; i++) {
 				foreach (MusicElement me in musicElements) {
 					if (!me.IsRest ())
@@ -85,7 +85,7 @@ namespace Assets.Scripts
 		public List<float> GetNoteDurations(int bpm){
 			List<float> durations = new List<float> ();
 
-			int numCycles = (int) (msTimeLim / msRhythmDuration) + 2;
+			int numCycles = (int) (msTimeLim / msRhythmDuration) + 8;
 			for (int i = 0; i < numCycles; i++)
 			{
 				foreach (MusicElement me in musicElements) {

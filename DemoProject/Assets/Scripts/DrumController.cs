@@ -92,7 +92,6 @@ public class DrumController : MonoBehaviour {
 			rhythmLoader.LoadRhythm(MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
 			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
-			TNBText = stdList.Count;
 
 			/* init */
 			countdownText.text = "";
@@ -201,10 +200,11 @@ public class DrumController : MonoBehaviour {
 
 	//analizing timestamps after finishing the song
 	void PerformanceAnalysis(){
+		TNBText = i;
 		int stdListIndex = 0; //index for stdList
 		int listIndex = 0; //index for list
 
-		while (stdListIndex < stdList.Count && listIndex < list.Count) {
+		while (stdListIndex < TNBText && listIndex < list.Count) {
 			float upper = stdList [stdListIndex] + error + 8 * beat;
 			float lower = stdList [stdListIndex] - error + 8 * beat;
 			if (list [listIndex] < upper && list [listIndex] > lower) {
@@ -235,7 +235,7 @@ public class DrumController : MonoBehaviour {
 		}
 
 		//log remaining data
-		while (stdListIndex < stdList.Count) {
+		while (stdListIndex < TNBText) {
 			if(MenuController.debug == false)
 				LogManager.Instance.Log (stdList [stdListIndex], NaN, /*stdDuration [stdListIndex], 0,*/ stdListIndex);
 			stdListIndex++;
@@ -284,7 +284,7 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateDrumPrompt(){
-		if (j < stdList.Count && Time.timeSinceLevelLoad > stdList[j] + 8 * beat) {
+		if (j < stdList.Count && Time.timeSinceLevelLoad - launchTime > stdList[j]) {
 			WoodBlock.Play ();
 			j++;
 		}
@@ -328,7 +328,7 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateKeyDown(){
 		//add timestamp to the list
-		list.Add (Time.timeSinceLevelLoad);
+		list.Add (Time.timeSinceLevelLoad - launchTime);
 
 		//play sound clip
 		SingleStickSfx.Play ();
@@ -336,12 +336,17 @@ public class DrumController : MonoBehaviour {
 
 	void EndPlayingSession(){
 		hasEnded = true;
-		endScreenController.Enable();
-		endScreenTime = Time.timeSinceLevelLoad;
 
-		if (analyzed == false) {
-			PerformanceAnalysis ();
-			analyzed = true;
+		if (MenuController.gameNum != 3) {
+			endScreenController.Enable ();
+			endScreenTime = Time.timeSinceLevelLoad;
+
+			if (analyzed == false) {
+				PerformanceAnalysis ();
+				analyzed = true;
+			}
+		} else {
+			SceneManager.LoadScene ("Menu");
 		}
 	}
 
