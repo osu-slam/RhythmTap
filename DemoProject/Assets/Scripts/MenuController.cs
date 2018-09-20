@@ -12,8 +12,8 @@ public class MenuController : MonoBehaviour {
 	public static bool debug = false;
 
 	public Text Username_field;
+	public Dropdown phraseDropdown;
 	public Dropdown dp0;
-	//public Dropdown dp1;
 	//public Dropdown dp2;
 	public Dropdown dp3;
 	public Dropdown dp4;
@@ -21,6 +21,7 @@ public class MenuController : MonoBehaviour {
 	public static AudioClip audioClip;
 
 	public static string rhythm = "";
+	public static string phrase = "";
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +32,18 @@ public class MenuController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	public void UpdatePhrase(){
+		switch (phraseDropdown.value) {
+		case 1:
+			phrase = "Help me please";
+			break;
+		default:
+			phrase = "";
+			break;
+		}
+	}
+
 	public void StartGame0(){
 		gameNum = 0;
 		rhythm = "4n 4r";

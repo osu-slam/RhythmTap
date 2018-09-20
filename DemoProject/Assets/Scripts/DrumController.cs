@@ -9,6 +9,7 @@ using Assets.Scripts.TextureStorage;
 public class DrumController : MonoBehaviour {
 	private const float NaN = 0.0f / 0;
 	public float bpm = 0f; //default
+	private static int BeatsPerMeasure = 4;
 
 	public AudioSource Clave;
 	public AudioSource WoodBlock;
@@ -18,6 +19,7 @@ public class DrumController : MonoBehaviour {
     //public Text scoreText;
     public Text countdownText;
 	public Text promptText;
+	public Text phraseText;
 	bool analyzed = false;
 
 
@@ -62,6 +64,9 @@ public class DrumController : MonoBehaviour {
 	int j = 0;
 	int totalBeats;
 
+	private string[] phraseTokens;
+	private int numTokens = 0;
+
 	// Use this for initialization
 	void Start () {
 		endScreenController = new EndScreenController ();
@@ -69,6 +74,23 @@ public class DrumController : MonoBehaviour {
 		endScreenTime = 0.0f;
 		sr = GetComponent<SpriteRenderer> ();
 		bpm = (float)MenuController.bpm;
+		phraseTokens = MenuController.phrase.Split (' ');
+		if (phraseTokens.Length > 0) {
+			switch (MenuController.gameNum) {
+			case 0:
+				numTokens = 1;
+				break;
+			case 1:
+				numTokens = 2;
+				break;
+			case 2:
+				numTokens = 3;
+				break;
+			default:
+				numTokens = 0;
+				break;
+			}
+		}
 
 		if(MenuController.debug == false)
 			LogManager.Instance.LogSessionStart (bpm, MenuController.gameNum);
@@ -84,6 +106,11 @@ public class DrumController : MonoBehaviour {
 			beat = 60.0f/bpm;
 			nextMetronomeBeat = (float)(AudioSettings.dspTime + beat);
 			totalBeats = (int)(bpm / 4) * 4 + 8;
+
+			if (MenuController.gameNum == 1)
+				BeatsPerMeasure = 3;
+			else
+				BeatsPerMeasure = 4;
 
 			stdList = new List<float> ();
 
@@ -148,7 +175,12 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateRegularPlayMode(){
-		if (Time.timeSinceLevelLoad - launchTime > 2*beat && !hasLaunched) {
+		int numIntroBeats = BeatsPerMeasure * 2;
+		int numCountdownBeats = 6;
+		float timeBeforeCountdown = (numIntroBeats - numCountdownBeats) * beat;
+		float introLen = numIntroBeats * beat;
+
+		if (Time.timeSinceLevelLoad - launchTime > timeBeforeCountdown && !hasLaunched) {
 			StartCountDown (); //hasLaunched = true
 		}
 
@@ -156,27 +188,27 @@ public class DrumController : MonoBehaviour {
 			if (!hasPlayed && hasLaunched) {
 				UpdateCountDownText (); //hasStarted = true
 
-				if (Time.timeSinceLevelLoad - countDownTime > 8 * beat) {
+				if (Time.timeSinceLevelLoad - countDownTime > introLen) {
 					hasPlayed = true;
 					StartPlayingSession (); //set startTime
 				}
-				if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + beat * 8) {
-					EndPlayingSession (); //hasEnded = true
+				if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + introLen) {
+					EndPlayingSession (introLen); //hasEnded = true
 				}
 			} else {
-				if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + beat * 8) {
-					EndPlayingSession (); //hasEnded = true
+				if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + introLen) {
+					EndPlayingSession (introLen); //hasEnded = true
 				}
 			}
 		}
-		UpdateDrumHighlight ();
+		UpdateDrumHighlight (introLen);
 		UpdateDrumPrompt ();
 
 		if (hasStarted && !hasEnded) {
 			if (Input.GetKeyDown (KeyCode.Space))
 				UpdateKeyDown ();
 			else if (Input.GetKeyUp (KeyCode.P))
-				EndPlayingSession ();
+				EndPlayingSession (introLen);
 
 			if (Input.touchCount > 0) {
 				switch(Input.GetTouch(0).phase){
@@ -199,18 +231,18 @@ public class DrumController : MonoBehaviour {
 	}
 
 	//analizing timestamps after finishing the song
-	void PerformanceAnalysis(){
+	void PerformanceAnalysis(float introLen){
 		TNBText = i;
 		int stdListIndex = 0; //index for stdList
 		int listIndex = 0; //index for list
 
 		while (stdListIndex < TNBText && listIndex < list.Count) {
-			float upper = stdList [stdListIndex] + error + 8 * beat;
-			float lower = stdList [stdListIndex] - error + 8 * beat;
+			float upper = stdList [stdListIndex] + error + introLen;
+			float lower = stdList [stdListIndex] - error + introLen;
 			if (list [listIndex] < upper && list [listIndex] > lower) {
 				if (MenuController.debug == false) {
 					LogManager.Instance.Log (stdList [stdListIndex], 
-						list [listIndex] - (8 * beat), 
+						list [listIndex] - introLen, 
 						//stdDuration [stdListIndex], 
 						//duration [listIndex], 
 						stdListIndex);
@@ -228,7 +260,7 @@ public class DrumController : MonoBehaviour {
 				stdListIndex++;
 			} else {
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat, /*NaN, duration [listIndex],*/ -1);
+					LogManager.Instance.Log (NaN, list [listIndex] - introLen, /*NaN, duration [listIndex],*/ -1);
 				listIndex++;
 				FAText++;
 			}
@@ -243,7 +275,7 @@ public class DrumController : MonoBehaviour {
 
 		while (listIndex < list.Count) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (NaN, list [listIndex] - 8 * beat,/* NaN, duration [listIndex],*/ -1);
+				LogManager.Instance.Log (NaN, list [listIndex] - introLen,/* NaN, duration [listIndex],*/ -1);
 			listIndex++;
 			FAText++;
 		}
@@ -274,23 +306,25 @@ public class DrumController : MonoBehaviour {
 		hasLaunched = true;
 	}
 
-	void UpdateDrumHighlight(){
+	void UpdateDrumHighlight(float introLen){
 		if (i < stdList.Count) {
 			float time;
-			time = stdList [i] + 8 * beat;
-			if (!HighlightDrum (time, stdDuration[i]))
+			time = stdList [i] + introLen;
+			if (!HighlightDrum (time, stdDuration[i], introLen))
 				i++;
 		}
 	}
 
 	void UpdateDrumPrompt(){
-		if (j < stdList.Count && Time.timeSinceLevelLoad - launchTime > stdList[j]) {
+		if (j < stdList.Count && Time.timeSinceLevelLoad - launchTime + .01f > stdList[j]) {
 			WoodBlock.Play ();
+			if (numTokens > 0)
+				phraseText.text = phraseTokens [(j) % numTokens];
 			j++;
 		}
 	}
 
-	bool HighlightDrum(float time, float duration){
+	bool HighlightDrum(float time, float duration, float offset){
 		float upperBound = time + duration - drumHighlightBreak;
 		float lowerBound = time + 0.05f;
 		if (Time.timeSinceLevelLoad > lowerBound && Time.timeSinceLevelLoad < upperBound) {
@@ -334,7 +368,7 @@ public class DrumController : MonoBehaviour {
 		SingleStickSfx.Play ();
 	}
 
-	void EndPlayingSession(){
+	void EndPlayingSession(float introLen){
 		hasEnded = true;
 
 		if (MenuController.gameNum != 3) {
@@ -342,7 +376,7 @@ public class DrumController : MonoBehaviour {
 			endScreenTime = Time.timeSinceLevelLoad;
 
 			if (analyzed == false) {
-				PerformanceAnalysis ();
+				PerformanceAnalysis (introLen);
 				analyzed = true;
 			}
 		} else {
