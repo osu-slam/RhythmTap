@@ -23,9 +23,27 @@ public class MenuController : MonoBehaviour {
 	public static string rhythm = "";
 	public static string phrase = "";
 
+	private static string[] phrases = new string[] {
+		"Help me please.",
+		"Let’s go out.",
+		"Get my drink.",
+		"Put it there.",
+		"How are you?",
+		"Will you join?",
+		"What’s for lunch?",
+		"Can I see?",
+		"I am good.",
+		"My head hurts.",
+		"Thanks so much.",
+		"Good bye Joe.",
+		"Hi there Joe.",
+		"Love you lots."
+	};
+
 	// Use this for initialization
 	void Start () {
 		bpm = 30;
+		phrase = "";
 	}
 	
 	// Update is called once per frame
@@ -34,13 +52,10 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void UpdatePhrase(){
-		switch (phraseDropdown.value) {
-		case 1:
-			phrase = "Help me please";
-			break;
-		default:
+		if(phraseDropdown.value > 0 && phraseDropdown.value - 1 < phrases.Length){
+			phrase = phrases[phraseDropdown.value - 1];
+		} else {
 			phrase = "";
-			break;
 		}
 	}
 

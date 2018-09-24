@@ -75,7 +75,7 @@ public class DrumController : MonoBehaviour {
 		sr = GetComponent<SpriteRenderer> ();
 		bpm = (float)MenuController.bpm;
 		phraseTokens = MenuController.phrase.Split (' ');
-		if (phraseTokens.Length > 0) {
+		if (phraseTokens.Length > 0 && phraseTokens[0].Length > 0) {
 			switch (MenuController.gameNum) {
 			case 0:
 				numTokens = 1;
