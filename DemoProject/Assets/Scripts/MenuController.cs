@@ -22,37 +22,25 @@ public class MenuController : MonoBehaviour {
 	public InputField[] words;
 
 	public static string rhythm = "";
-	public static string phrase = "";
+	public static string[] phrase;
+	public static int[] displayOrder;
+	public static int displayOrderLen;
 	private int noteCount = 0;
 
-	private static string[] phrases = new string[] {
-		"Help me please.",
-		"Let’s go out.",
-		"Get my drink.",
-		"Put it there.",
-		"How are you?",
-		"Will you join?",
-		"What’s for lunch?",
-		"Can I see?",
-		"I am good.",
-		"My head hurts.",
-		"Thanks so much.",
-		"Good bye Joe.",
-		"Hi there Joe.",
-		"Love you lots."
-	};
 
 	// Use this for initialization
 	void Start () {
 		bpm = 30;
-		phrase = "";
+		phrase = new string[3];
+		displayOrder = new int[6];
+		displayOrderLen = 0;
 		rhythm = "";
 		noteCount = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		inputField.text = rhythm;
+		//inputField.text = rhythm;
 	}
 
 	public void AddQuarterNote(){
@@ -76,7 +64,9 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void ClearEntries(){
-		phrase = "";
+		phrase = new string[3];
+		displayOrder = new int[6];
+		displayOrderLen = 0;
 		rhythm = "";
 		noteCount = 0;
 		foreach (Image img in notes){
@@ -92,12 +82,14 @@ public class MenuController : MonoBehaviour {
 		if (noteCount == 0)
 			return;
 		
-		for (int i = 0; i < notes.Length; i++){
-			phrase += words[i].text + " ";
-			if(notes[i].sprite.Equals(eighthNotes))
-				phrase += words[i].text + " ";
+		for (int i = 0; i < noteCount; i++){
+			phrase [i] = words [i].text;
+			displayOrder [displayOrderLen++] = i;
+
+			if (notes [i].sprite.Equals (eighthNotes)) {
+				displayOrder [displayOrderLen++] = i;
+			}
 		}
-		phrase = phrase.Trim ();
 
 		switch (dp.value) {
 		case 0:

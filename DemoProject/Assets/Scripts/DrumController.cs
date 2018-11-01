@@ -19,7 +19,8 @@ public class DrumController : MonoBehaviour {
     //public Text scoreText;
     public Text countdownText;
 	public Text promptText;
-	public Text phraseText;
+	public Text[] phraseSections;
+	public Image[] phraseBackgrounds;
 	bool analyzed = false;
 
 
@@ -66,9 +67,6 @@ public class DrumController : MonoBehaviour {
 	int currWord = 0;
 	int totalBeats;
 
-	private string[] phraseTokens;
-	private int numTokens = 0;
-
 	// Use this for initialization
 	void Start () {
 		endScreenController = new EndScreenController ();
@@ -76,10 +74,6 @@ public class DrumController : MonoBehaviour {
 		endScreenTime = 0.0f;
 		sr = GetComponent<SpriteRenderer> ();
 		bpm = (float)MenuController.bpm;
-		phraseTokens = MenuController.phrase.Split (' ');
-		if (phraseTokens.Length > 0 && phraseTokens[0].Length > 0) {
-			numTokens = phraseTokens.Length;
-		}
 
 		if(MenuController.debug == false)
 			LogManager.Instance.LogSessionStart (bpm, MenuController.gameNum);
@@ -129,6 +123,15 @@ public class DrumController : MonoBehaviour {
 			countDownTime = 0.0f;
 			launchTime = Time.timeSinceLevelLoad;
 			startTime = 0.0f;
+
+			/* Populate phrase prompt */
+			string[] phrase = MenuController.phrase;
+			for (int i = 0; i < phrase.Length; i++) {
+				if (phrase [i] == null || phrase [i].Equals (""))
+					phraseBackgrounds [i].enabled = false;
+				else
+					phraseSections [i].text = phrase [i];
+			}
 		} else {
 			countdownText.text = "";
 			lengthOfAudio = 60.0f;
@@ -153,12 +156,6 @@ public class DrumController : MonoBehaviour {
 		}
 
 		if (MenuController.impromptu == false) {
-
-			/*if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
-			{
-				Clave.Play();
-				nextMetronomeBeat += beat;
-			}*/
 
 			UpdateRegularPlayMode ();
 		}
@@ -308,13 +305,15 @@ public class DrumController : MonoBehaviour {
 	void UpdateDrumPrompt(){
 		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j]) {
 			WoodBlock.Play ();
-
-			if (currWord < numTokens)
-				phraseText.text = phraseTokens [currWord++];
-			else 
-				currWord = 0;
-			
 			j++;
+
+			for (int k = 0; k < phraseBackgrounds.Length; k++) {
+				phraseBackgrounds [k].color = Color.white;
+			}
+
+			phraseBackgrounds [MenuController.displayOrder [currWord++]].color = Color.yellow;
+			if (currWord == MenuController.displayOrderLen)
+				currWord = 0;
 		}
 		if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
 		{
