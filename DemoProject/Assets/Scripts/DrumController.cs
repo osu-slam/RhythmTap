@@ -63,6 +63,7 @@ public class DrumController : MonoBehaviour {
 	private float endScreenTime;
 	int i = 0;
 	int j = 0;
+	int currWord = 0;
 	int totalBeats;
 
 	private string[] phraseTokens;
@@ -77,20 +78,7 @@ public class DrumController : MonoBehaviour {
 		bpm = (float)MenuController.bpm;
 		phraseTokens = MenuController.phrase.Split (' ');
 		if (phraseTokens.Length > 0 && phraseTokens[0].Length > 0) {
-			switch (MenuController.gameNum) {
-			case 0:
-				numTokens = 1;
-				break;
-			case 1:
-				numTokens = 2;
-				break;
-			case 2:
-				numTokens = 3;
-				break;
-			default:
-				numTokens = 0;
-				break;
-			}
+			numTokens = phraseTokens.Length;
 		}
 
 		if(MenuController.debug == false)
@@ -320,14 +308,16 @@ public class DrumController : MonoBehaviour {
 	void UpdateDrumPrompt(){
 		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j]) {
 			WoodBlock.Play ();
-			if (numTokens > 0)
-				phraseText.text = phraseTokens [(j) % numTokens];
+
+			if (currWord < numTokens)
+				phraseText.text = phraseTokens [currWord++];
+			else 
+				currWord = 0;
 			
 			j++;
 		}
 		if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
 		{
-			
 			Clave.Play ();
 			nextMetronomeBeat += beat;
 		}
