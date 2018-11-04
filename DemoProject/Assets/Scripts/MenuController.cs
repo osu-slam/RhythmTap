@@ -201,9 +201,11 @@ public class MenuController : MonoBehaviour {
 	}
 	public void StartMenu1(){
 		
+		SceneManager.LoadScene("RhythmSelection");
+	}
+	public void AddRhythmsScene(){
 		SceneManager.LoadScene("Menu");
 	}
-
 	public void EnableDebug(){
 		debug = true;
 	}
