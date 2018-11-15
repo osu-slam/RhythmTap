@@ -9,7 +9,7 @@ using Assets.Scripts.TextureStorage;
 public class DrumController : MonoBehaviour {
 	private const float NaN = 0.0f / 0;
 	public float bpm = 0f; //default
-	private static int BeatsPerMeasure = 4;
+	private static float BeatsPerMeasure = 4f;
 
 	public AudioSource Clave;
 	public AudioSource WoodBlock;
@@ -27,6 +27,7 @@ public class DrumController : MonoBehaviour {
 	//float variance;
 	public List<float> list;
 	public List<float> stdList;
+	public List<float> tickList;
 	public List<float> halfNotes;
 	private List<float> stdDuration;
 	bool hasStarted = false;
@@ -64,6 +65,7 @@ public class DrumController : MonoBehaviour {
 	private float endScreenTime;
 	int i = 0;
 	int j = 0;
+	int z = 0;
 	int currWord = 0;
 	int totalBeats;
 
@@ -92,9 +94,23 @@ public class DrumController : MonoBehaviour {
 			totalBeats = (int)(bpm / 4) * 4 + 8;
 
 			if (MenuController.gameNum == 1)
-				BeatsPerMeasure = 3;
+				BeatsPerMeasure = 3f;
 			else
-				BeatsPerMeasure = 4;
+				BeatsPerMeasure = 4f;
+
+			if (DBScript.arrhythmicMode) {
+				switch (MenuController.gameNum) {
+				case 0:
+					BeatsPerMeasure += 1f;
+					break;
+				case 1:
+					BeatsPerMeasure += 0.5f;
+					break;
+				case 2:
+					BeatsPerMeasure += 0.5f;
+					break;
+				}
+			}
 
 			stdList = new List<float> ();
 
@@ -103,6 +119,7 @@ public class DrumController : MonoBehaviour {
 			rhythmLoader.LoadRhythm(MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
 			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
+			tickList = rhythmLoader.GetTickTimes ();
 
 			/* init */
 			countdownText.text = "";
@@ -140,7 +157,7 @@ public class DrumController : MonoBehaviour {
 			hasLaunched = false;
 		}
 		//StartAudio ();
-		Clave.Play();
+		//Clave.Play();
 		totalBeats--;
 	}
 
@@ -162,7 +179,8 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateRegularPlayMode(){
-		int numIntroBeats = BeatsPerMeasure * 2;
+		//Prompt with 2 repeats of rhythm
+		float numIntroBeats = BeatsPerMeasure * 2;
 		int numCountdownBeats = 6;
 		float timeBeforeCountdown = (numIntroBeats - numCountdownBeats) * beat;
 		float introLen = numIntroBeats * beat;
@@ -315,10 +333,9 @@ public class DrumController : MonoBehaviour {
 			if (currWord == MenuController.displayOrderLen)
 				currWord = 0;
 		}
-		if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
-		{
+		if (z < tickList.Count && AudioSettings.dspTime >= dspTime + tickList [z]) {
 			Clave.Play ();
-			nextMetronomeBeat += beat;
+			z++;
 		}
 	}
 
@@ -369,16 +386,12 @@ public class DrumController : MonoBehaviour {
 	void EndPlayingSession(float introLen){
 		hasEnded = true;
 
-		if (MenuController.gameNum != 3) {
-			endScreenController.Enable ();
-			endScreenTime = Time.timeSinceLevelLoad;
+		endScreenController.Enable ();
+		endScreenTime = Time.timeSinceLevelLoad;
 
-			if (analyzed == false) {
-				PerformanceAnalysis (introLen);
-				analyzed = true;
-			}
-		} else {
-			SceneManager.LoadScene ("Menu");
+		if (analyzed == false) {
+			PerformanceAnalysis (introLen);
+			analyzed = true;
 		}
 	}
 

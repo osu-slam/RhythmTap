@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
 using System.Data;
 
@@ -12,6 +13,8 @@ public class DBScript : MonoBehaviour {
 	public Dropdown rhythmDropdown;
 	public Dropdown bpmDropdown;
 	public InputField[] words;
+	public Toggle arrhythmicToggle;
+	public static bool arrhythmicMode;
 
 	void Start () {
 		dbPath = "URI=file:" + Application.persistentDataPath + "/rhythmTap.db";
@@ -164,5 +167,11 @@ public class DBScript : MonoBehaviour {
 		string p = string.Join (" ", phrase);
 
 		InsertRhythm (MenuController.rhythm, p);
+
+		SceneManager.LoadScene("RhythmSelection");
+	}
+
+	void Update(){
+		arrhythmicMode = arrhythmicToggle.isOn;
 	}
 }

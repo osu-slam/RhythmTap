@@ -120,92 +120,14 @@ public class MenuController : MonoBehaviour {
 				displayOrder [displayOrderLen++] = i;
 			}
 		}
-		gameNum = rSplit.Length == 2 ? 1 : 0;
+		//gameNum = rSplit.Length == 2 ? 1 : 0;
+		gameNum = rSplit.Length-1;
 		bpm = b;
 		rhythm = r + " 4r";
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
-	/*
-	public void UpdatePhrase(){
-		if(phraseDropdown.value > 0 && phraseDropdown.value - 1 < phrases.Length){
-			phrase = phrases[phraseDropdown.value - 1];
-		} else {
-			phrase = "";
-		}
-	}
 
-	public void StartGame0(){
-		gameNum = 0;
-		rhythm = "4n 4r";
-		switch (dp0.value) {
-		case 0:
-			bpm = 55;
-			break;
-		case 1:
-			bpm = 65;
-			break;
-		default:
-			bpm = 75;
-			break;
-		}
-		impromptu = false;
-		SceneManager.LoadScene("MainScene");
-	}
-	public void StartGame1(){
-		rhythm = "4n 4n 4r";
-		gameNum = 1;
-		switch (dp3.value) {
-		case 0:
-			bpm = 55;
-			break;
-		case 1:
-			bpm = 65;
-			break;
-		default:
-			bpm = 75;
-			break;
-		}
-		impromptu = false;
-		SceneManager.LoadScene("MainScene");
-	}
-    public void StartGame2(){
-		rhythm = "4n 4n 4n 4r";
-		gameNum = 2;
-		switch (dp4.value) {
-		case 0:
-			bpm = 55;
-			break;
-		case 1:
-			bpm = 65;
-			break;
-		default:
-			bpm = 75;
-			break;
-		}
-        impromptu = false;
-        SceneManager.LoadScene("MainScene");
-
-    }
-
-	public void StartGame3(){
-		rhythm = "4n 4n 4n 4n";
-		gameNum = 3;
-		switch (dp5.value) {
-		case 0:
-			bpm = 55;
-			break;
-		case 1:
-			bpm = 65;
-			break;
-		default:
-			bpm = 75;
-			break;
-		}
-		impromptu = false;
-		SceneManager.LoadScene("MainScene");
-	}
-*/
     public void QuitGame(){
 		Application.Quit();
 	}

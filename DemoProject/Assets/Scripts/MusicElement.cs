@@ -41,6 +41,9 @@ namespace Assets.Scripts
 				case ElementType.Eighth_Note_T:
 					noteDuration /= 3;
 					break;
+				case ElementType.Eighth_Rest:
+					noteDuration /= 2;
+					break;
 			}
 			return noteDuration;
 		}

@@ -1,23 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MenuController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\DBScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\DrumController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MenuController.cs" Line="114" Column="3" />
-      <File FileName="Assets\Scripts\RhythmLoader.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DrumController.cs" Line="101" Column="8" />
+      <File FileName="Assets\Scripts\MenuController.cs" Line="124" Column="28" />
       <File FileName="Assets\Scripts\TextureStorage\RhythmDataStorage.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MusicElement.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DBScript.cs" Line="36" Column="1" />
-      <File FileName="Assets\MainSceneScript.cs" Line="19" Column="42" />
+      <File FileName="Assets\Scripts\DBScript.cs" Line="17" Column="16" />
+      <File FileName="Assets\Scripts\RhythmLoader.cs" Line="37" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Assets\Scripts\DrumController.cs" line="370" column="1" />
-      <Breakpoint file="C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Assets\Scripts\MenuController.cs" line="112" column="1" />
-      <Breakpoint file="C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Assets\Scripts\DBScript.cs" line="36" column="1" />
-      <Breakpoint file="C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Assets\Scripts\MenuController.cs" line="119" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

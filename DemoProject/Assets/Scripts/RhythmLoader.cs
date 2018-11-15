@@ -11,6 +11,7 @@ namespace Assets.Scripts
     {
         List<MusicElement> musicElements;
 		List<float> times;
+		List<float> tickTimes;
 		float msRhythmDuration;
 		float msTimeLim;
 		float bpm;
@@ -19,6 +20,7 @@ namespace Assets.Scripts
         {
             musicElements = new List<MusicElement>();
 			times = new List<float> ();
+			tickTimes = new List<float> ();
 			msRhythmDuration = 0.0f;
 			msTimeLim = 0.0f;
 			bpm = 0.0f;
@@ -32,6 +34,7 @@ namespace Assets.Scripts
         }
 
 		private void Parse(String input){
+			if(DBScript.arrhythmicMode) input += " 8r";
 			String[] elements = input.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 			for(int i = 0; i < elements.Length; i++)
 			{
@@ -60,6 +63,20 @@ namespace Assets.Scripts
 			}
 		}
 			
+
+		public List<float> GetTickTimes(){
+			float time = 0.0f;
+			int numCycles = (int) (msTimeLim / msRhythmDuration) + 8;
+			for (int i = 0; i < numCycles; i++) {
+				for (int j = 0; j <= MenuController.gameNum + 1; j++) {
+					tickTimes.Add (time);
+					time += new MusicElement("Quarter_Note").GetNoteDuration((int)bpm);
+					if(DBScript.arrhythmicMode && j == MenuController.gameNum + 1)
+						time += new MusicElement("Eighth_Note").GetNoteDuration((int)bpm);
+				}
+			}
+			return tickTimes;
+		}
 
 		public List<float> GetRhythmTimes(){
 			float time = 0.0f;
