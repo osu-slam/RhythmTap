@@ -113,17 +113,17 @@
  <Reference Include="Mono.Data.SqliteClient">
  <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/Mono.Data.SqliteClient.dll</HintPath>
  </Reference>
- <Reference Include="System.EnterpriseServices">
- <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.EnterpriseServices.dll</HintPath>
- </Reference>
- <Reference Include="System.Security">
- <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.Security.dll</HintPath>
- </Reference>
  <Reference Include="System.Configuration">
  <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.Configuration.dll</HintPath>
  </Reference>
  <Reference Include="System.Data">
  <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System.EnterpriseServices">
+ <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.EnterpriseServices.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Security">
+ <HintPath>C:/Users/kathy/Documents/Unity/RhythmTap/DemoProject/Assets/Plugins/SQLite/System.Security.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

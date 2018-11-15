@@ -107,6 +107,25 @@ public class MenuController : MonoBehaviour {
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
+
+	public static void StartGame(string r, string p, int b){
+		string[] rSplit = r.Replace("8n 8n", "8n8n").Split(' ');
+		string[] pSplit = p.Split(' ');
+
+		for (int i = 0; i < rSplit.Length; i++){
+			phrase [i] = pSplit [i];
+			displayOrder [displayOrderLen++] = i;
+
+			if (rSplit[i].Equals("8n8n")) {
+				displayOrder [displayOrderLen++] = i;
+			}
+		}
+		gameNum = rSplit.Length == 2 ? 1 : 0;
+		bpm = b;
+		rhythm = r + " 4r";
+		impromptu = false;
+		SceneManager.LoadScene("MainScene");
+	}
 	/*
 	public void UpdatePhrase(){
 		if(phraseDropdown.value > 0 && phraseDropdown.value - 1 < phrases.Length){
