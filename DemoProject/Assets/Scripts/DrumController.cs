@@ -329,7 +329,7 @@ public class DrumController : MonoBehaviour {
 				phraseBackgrounds [k].color = Color.white;
 			}
 
-			phraseBackgrounds [MenuController.displayOrder [currWord++]].color = Color.yellow;
+			phraseBackgrounds [MenuController.displayOrder [currWord++]].color = new Color32(255, 224, 102, 255);;
 			if (currWord == MenuController.displayOrderLen)
 				currWord = 0;
 		}

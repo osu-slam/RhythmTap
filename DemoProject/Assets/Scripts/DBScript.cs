@@ -172,6 +172,7 @@ public class DBScript : MonoBehaviour {
 	}
 
 	void Update(){
-		arrhythmicMode = arrhythmicToggle.isOn;
+		if(arrhythmicToggle != null)
+			arrhythmicMode = arrhythmicToggle.isOn;
 	}
 }
