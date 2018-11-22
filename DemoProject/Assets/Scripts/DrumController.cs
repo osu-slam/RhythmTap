@@ -322,7 +322,7 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateDrumPrompt(float introLen){
 		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j] + introLen) {
-			//WoodBlock.Play ();
+			WoodBlock.Play ();
 			j++;
 
 			for (int k = 0; k < phraseBackgrounds.Length; k++) {

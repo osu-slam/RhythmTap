@@ -42,7 +42,6 @@ namespace Assets.Scripts
         }
 
 		private void Parse(String input){
-			//if(DBScript.arrhythmicMode) input += " 8r";
 			String[] elements = input.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 			for(int i = 0; i < elements.Length; i++)
 			{
@@ -84,18 +83,9 @@ namespace Assets.Scripts
 
 		public List<float> GetTickTimes(){
 			float time = 0.0f;
-			//int numCycles = (int) (msTimeLim / msRhythmDuration) + 4;
 			for (int i = 0; i < numCyc; i++) {
 				for (int j = 0; j <= MenuController.gameNum + 1; j++) {
 					tickTimes.Add (time);
-
-					/*float qNoteDur = new MusicElement("Quarter_Note").GetNoteDuration((int)bpm);
-					if (DBScript.arrhythmicMode && j == MenuController.gameNum + 1) {
-						//time += qNoteDur + new MusicElement("Eighth_Note").GetNoteDuration((int)bpm);
-						time += UnityEngine.Random.Range (0.6f * qNoteDur, 1.4f * qNoteDur);
-					} else {
-						time += qNoteDur;
-					}*/
 
 					if (j == MenuController.gameNum + 1) {
 						time += restDurations [i];
@@ -109,12 +99,13 @@ namespace Assets.Scripts
 
 		public List<float> GetRhythmTimes(){
 			float time = 0.0f;
-			//int numCycles = (int) (msTimeLim / msRhythmDuration) + 8;
 			for (int i = 0; i < numCyc; i++) {
 				foreach (MusicElement me in musicElements) {
-					if (!me.IsRest ())
+					if (!me.IsRest ()) {
 						times.Add (time);
-					time += me.GetNoteDuration ((int)bpm);
+						time += me.GetNoteDuration ((int)bpm);
+					} else
+						time += restDurations [i];
 				}
 			}
 			return times;
