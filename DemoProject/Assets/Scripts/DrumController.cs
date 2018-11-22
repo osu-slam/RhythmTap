@@ -91,9 +91,9 @@ public class DrumController : MonoBehaviour {
 			beat = 60.0f/bpm;
 			nextMetronomeBeat = (float)(AudioSettings.dspTime + beat);
 			dspTime = (float)(AudioSettings.dspTime);
-			totalBeats = (int)(bpm / 4) * 4 + 8;
+			totalBeats = (int)(bpm / 4) * 4 + 4;
 
-			if (MenuController.gameNum == 1)
+			/*if (MenuController.gameNum == 1)
 				BeatsPerMeasure = 3f;
 			else
 				BeatsPerMeasure = 4f;
@@ -110,7 +110,7 @@ public class DrumController : MonoBehaviour {
 					BeatsPerMeasure += 0.5f;
 					break;
 				}
-			}
+			}*/
 
 			stdList = new List<float> ();
 
@@ -180,8 +180,8 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		//Prompt with 2 repeats of rhythm
-		float numIntroBeats = BeatsPerMeasure * 2;
-		int numCountdownBeats = 6;
+		float numIntroBeats = 4;
+		int numCountdownBeats = 4;
 		float timeBeforeCountdown = (numIntroBeats - numCountdownBeats) * beat;
 		float introLen = numIntroBeats * beat;
 
@@ -207,7 +207,7 @@ public class DrumController : MonoBehaviour {
 			}
 		}
 		UpdateDrumHighlight (introLen);
-		UpdateDrumPrompt ();
+		UpdateDrumPrompt (introLen);
 
 		if (hasStarted && !hasEnded) {
 			if (Input.GetKeyDown (KeyCode.Space))
@@ -307,7 +307,7 @@ public class DrumController : MonoBehaviour {
 
 	void StartCountDown(){
 		countDownTime = Time.timeSinceLevelLoad;
-		countdownText.text = "5";
+		countdownText.text = "3";
 		hasLaunched = true;
 	}
 
@@ -320,9 +320,9 @@ public class DrumController : MonoBehaviour {
 		}
 	}
 
-	void UpdateDrumPrompt(){
-		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j]) {
-			WoodBlock.Play ();
+	void UpdateDrumPrompt(float introLen){
+		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j] + introLen) {
+			//WoodBlock.Play ();
 			j++;
 
 			for (int k = 0; k < phraseBackgrounds.Length; k++) {
@@ -333,7 +333,7 @@ public class DrumController : MonoBehaviour {
 			if (currWord == MenuController.displayOrderLen)
 				currWord = 0;
 		}
-		if (z < tickList.Count && AudioSettings.dspTime >= dspTime + tickList [z]) {
+		if (z < tickList.Count && AudioSettings.dspTime >= dspTime + tickList [z] + introLen) {
 			Clave.Play ();
 			z++;
 		}
@@ -355,19 +355,15 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
+		if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
 			countdownText.text = "";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
+		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
 			countdownText.text = "Go!";
 			hasStarted = true;
-		} else if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
-			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
-			countdownText.text = "2";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 2 * beat) {
-			countdownText.text = "3";
+			countdownText.text = "1";
 		} else if (Time.timeSinceLevelLoad - countDownTime > 1 * beat) {
-			countdownText.text = "4";
+			countdownText.text = "2";
 		}
 	}
 
