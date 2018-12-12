@@ -49,6 +49,7 @@ public class DrumController : MonoBehaviour {
 	float error = 0.1f;
 	float beat = 0;
 	float drumHighlightBreak = 0.05f;
+	float audioDelay = 0.234f;
 
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
@@ -321,8 +322,9 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateDrumPrompt(float introLen){
-		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j] + introLen) {
+		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j] + introLen + audioDelay) {
 			WoodBlock.Play ();
+			Debug.Log ("audio played at " + AudioSettings.dspTime);
 			j++;
 
 			for (int k = 0; k < phraseBackgrounds.Length; k++) {
@@ -333,7 +335,7 @@ public class DrumController : MonoBehaviour {
 			if (currWord == MenuController.displayOrderLen)
 				currWord = 0;
 		}
-		if (z < tickList.Count && AudioSettings.dspTime >= dspTime + tickList [z] + introLen) {
+		if (z < tickList.Count && AudioSettings.dspTime >= dspTime + tickList [z] + introLen + audioDelay) {
 			Clave.Play ();
 			z++;
 		}
@@ -377,6 +379,7 @@ public class DrumController : MonoBehaviour {
 
 		//play sound clip
 		SingleStickSfx.Play ();
+		Debug.Log ("keydown at " + AudioSettings.dspTime);
 	}
 
 	void EndPlayingSession(float introLen){
