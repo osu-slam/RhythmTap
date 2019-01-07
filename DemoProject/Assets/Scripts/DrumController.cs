@@ -49,7 +49,10 @@ public class DrumController : MonoBehaviour {
 	float error = 0.1f;
 	float beat = 0;
 	float drumHighlightBreak = 0.05f;
-	float audioDelay = 0.234f;
+
+	float audioDelay = 0.234f;		//Account for user & system delay
+	//float audioDelay = 0.140f;	//Account for system delay
+	//float audioDelay = 0f;		//Account for no delay
 
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
