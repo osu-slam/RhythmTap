@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\MenuController.cs" />
      <Compile Include="Assets\Scripts\MusicElement.cs" />
      <Compile Include="Assets\Scripts\RhythmLoader.cs" />
+     <Compile Include="Assets\Scripts\SavWav.cs" />
      <Compile Include="Assets\Scripts\TextController.cs" />
      <Compile Include="Assets\Scripts\TextureStorage\RhythmDataStorage.cs" />
      <Compile Include="Assets\Scripts\TextureStorage\RhythmSoundStorage.cs" />

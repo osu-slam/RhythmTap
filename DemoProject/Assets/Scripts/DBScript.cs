@@ -17,14 +17,14 @@ public class DBScript : MonoBehaviour {
 	public static bool arrhythmicMode;
 
 	void Start () {
-		dbPath = "URI=file:" + Application.persistentDataPath + "/rhythmTap.db";
+		/*dbPath = "URI=file:" + Application.persistentDataPath + "/rhythmTap.db";
 		CreateSchema();
 
 		if (rhythmDropdown != null) {
 			rhythmDropdown.ClearOptions ();
 			GetRhythms ();
 			rhythmDropdown.AddOptions (options);
-		}
+		}*/
 		//InsertRhythm("4n 8n 8n", "Hi Kris-ten");
 		//InsertRhythm("4n 4n 4n", "Help me please");
 		//InsertRhythm("4n", "Hi");
@@ -36,8 +36,8 @@ public class DBScript : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		string rhythmOpTxt = rhythmDropdown.options [rhythmDropdown.value].text;
-		string[] opSplit = rhythmOpTxt.Replace ("\nText: ", "\n").Split('\n');
+	//	string rhythmOpTxt = rhythmDropdown.options [rhythmDropdown.value].text;
+	//	string[] opSplit = rhythmOpTxt.Replace ("\nText: ", "\n").Split('\n');
 
 		int bpm;
 		switch (bpmDropdown.value) {
@@ -52,7 +52,7 @@ public class DBScript : MonoBehaviour {
 			break;
 		}
 
-		MenuController.StartGame (opSplit [0], opSplit [1], bpm);
+		//MenuController.StartGame (opSplit [0], opSplit [1], bpm);
 	}
 
 	public void CreateSchema() {

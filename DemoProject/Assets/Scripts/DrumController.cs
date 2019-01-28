@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ public class DrumController : MonoBehaviour {
 	public Text promptText;
 	public Text[] phraseSections;
 	public Image[] phraseBackgrounds;
+	public GameObject microphone;
 	bool analyzed = false;
 
 
@@ -72,6 +74,13 @@ public class DrumController : MonoBehaviour {
 	int z = 0;
 	int currWord = 0;
 	int totalBeats;
+
+	int numCycles = 0;
+	static int MAX_CYCLES = 3;
+	float offset = 0f;
+	bool audioPlayed = false;
+	bool micActive = false;
+	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
 
 	// Use this for initialization
 	void Start () {
@@ -189,6 +198,39 @@ public class DrumController : MonoBehaviour {
 		float timeBeforeCountdown = (numIntroBeats - numCountdownBeats) * beat;
 		float introLen = numIntroBeats * beat;
 
+		if (numCycles < MAX_CYCLES) {
+			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8) {
+				microphone.SetActive (false);
+				if (micActive) {
+					Microphone.End (Microphone.devices[0]);
+					micActive = false;
+				}
+
+				numCycles++;
+				offset = numCycles * beat * 8;
+
+				audioPlayed = false;
+				return;
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 6) {
+				countdownText.text = "";
+				microphone.SetActive (true);
+				if (!micActive) {
+					audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 5, 44100);
+					micActive = true;
+				}
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
+				UpdateCountDownText ();
+			} else {
+				if (!audioPlayed) {
+					WoodBlock.Play ();
+					audioPlayed = true;
+				}
+			}
+		} else {
+			EndPlayingSession (introLen);
+		}
+
+		/*
 		if (Time.timeSinceLevelLoad - launchTime > timeBeforeCountdown && !hasLaunched) {
 			StartCountDown (); //hasLaunched = true
 		}
@@ -209,9 +251,9 @@ public class DrumController : MonoBehaviour {
 					EndPlayingSession (introLen); //hasEnded = true
 				}
 			}
-		}
-		UpdateDrumHighlight (introLen);
-		UpdateDrumPrompt (introLen);
+		}*/
+		//UpdateDrumHighlight (introLen);
+		//UpdateDrumPrompt (introLen);
 
 		if (hasStarted && !hasEnded) {
 			if (Input.GetKeyDown (KeyCode.Space))
@@ -315,7 +357,7 @@ public class DrumController : MonoBehaviour {
 		hasLaunched = true;
 	}
 
-	void UpdateDrumHighlight(float introLen){
+	/*void UpdateDrumHighlight(float introLen){
 		if (i < stdList.Count) {
 			float time;
 			time = stdList [i] + introLen;
@@ -357,18 +399,17 @@ public class DrumController : MonoBehaviour {
 			return false;
 		else
 			return true;
-	}
+	}*/
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
-			countdownText.text = "";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
+		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 5) {
 			countdownText.text = "Go!";
-			hasStarted = true;
-		} else if (Time.timeSinceLevelLoad - countDownTime > 2 * beat) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4) {
 			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 1 * beat) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3) {
 			countdownText.text = "2";
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
+			countdownText.text = "3";
 		}
 	}
 
@@ -381,7 +422,7 @@ public class DrumController : MonoBehaviour {
 		list.Add (Time.timeSinceLevelLoad - launchTime);
 
 		//play sound clip
-		SingleStickSfx.Play ();
+		//SingleStickSfx.Play ();
 		Debug.Log ("keydown at " + AudioSettings.dspTime);
 	}
 
@@ -391,10 +432,19 @@ public class DrumController : MonoBehaviour {
 		endScreenController.Enable ();
 		endScreenTime = Time.timeSinceLevelLoad;
 
-		if (analyzed == false) {
+		for (int i = 0; i < MAX_CYCLES; i++) {
+			string filename = WelcomeController.name + i + "_" +
+				DateTime.Now.Month.ToString() + "_" + 
+				DateTime.Now.Day.ToString() + "_" + 
+				DateTime.Now.Hour.ToString() + "_" + 
+				DateTime.Now.Minute.ToString();
+			SavWav.Save (filename, audioClip[i]);
+		}
+		/**if (analyzed == false) {
 			PerformanceAnalysis (introLen);
 			analyzed = true;
-		}
+		}*/
+		SceneManager.LoadScene ("RhythmSelection");
 	}
 
 	void LoadAnalysis(){

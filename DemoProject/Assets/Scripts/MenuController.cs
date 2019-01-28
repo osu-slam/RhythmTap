@@ -79,17 +79,17 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void StartGame(){
-		if (noteCount == 0)
-			return;
+		//if (noteCount == 0)
+	//		return;
 		
-		for (int i = 0; i < noteCount; i++){
+		/*for (int i = 0; i < noteCount; i++){
 			phrase [i] = words [i].text;
 			displayOrder [displayOrderLen++] = i;
 
 			if (notes [i].sprite.Equals (eighthNotes)) {
 				displayOrder [displayOrderLen++] = i;
 			}
-		}
+		}*/
 
 		switch (dp.value) {
 		case 0:
@@ -102,8 +102,8 @@ public class MenuController : MonoBehaviour {
 			bpm = 75;
 			break;
 		}
-		gameNum = noteCount == 2 ? 1 : 0;
-		rhythm += " 4r";
+		//gameNum = noteCount == 2 ? 1 : 0;
+		//rhythm += " 4r";
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
