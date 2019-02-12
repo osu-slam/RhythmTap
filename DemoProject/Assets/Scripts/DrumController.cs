@@ -16,6 +16,7 @@ public class DrumController : MonoBehaviour {
 	public AudioSource WoodBlock;
 	public AudioSource SingleStickSfx;
     public AudioSource game0Audio;
+	public AudioSource voice;
 
     //public Text scoreText;
     public Text countdownText;
@@ -201,10 +202,6 @@ public class DrumController : MonoBehaviour {
 		if (numCycles < MAX_CYCLES) {
 			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8) {
 				microphone.SetActive (false);
-				if (micActive) {
-					Microphone.End (Microphone.devices[0]);
-					micActive = false;
-				}
 
 				numCycles++;
 				offset = numCycles * beat * 8;
@@ -214,15 +211,16 @@ public class DrumController : MonoBehaviour {
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 6) {
 				countdownText.text = "";
 				microphone.SetActive (true);
-				if (!micActive) {
-					audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 5, 44100);
-					micActive = true;
-				}
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
 				UpdateCountDownText ();
 			} else {
+				if (micActive) {
+					Microphone.End (Microphone.devices[0]);
+					micActive = false;
+				}
+
 				if (!audioPlayed) {
-					WoodBlock.Play ();
+					voice.Play ();
 					audioPlayed = true;
 				}
 			}
@@ -404,6 +402,10 @@ public class DrumController : MonoBehaviour {
 	void UpdateCountDownText(){
 		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 5) {
 			countdownText.text = "Go!";
+			if (!micActive) {
+				audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
+				micActive = true;
+			}
 		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4) {
 			countdownText.text = "1";
 		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3) {
