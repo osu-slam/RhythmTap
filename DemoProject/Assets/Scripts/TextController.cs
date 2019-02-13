@@ -23,10 +23,7 @@ public class TextController : MonoBehaviour {
 		AvgScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
 		FAText.text = DrumController.FAText.ToString ();
 		NOHText.text = DrumController.NOHText.ToString ();
-		DurScoreText.text = DrumController.DurScoreText.ToString ("0.00");
 		NOMText.text = DrumController.NOMText.ToString ();
-		LessText.text = DrumController.LessText.ToString ();
-		MoreText.text = DrumController.MoreText.ToString ();
 	}
 	
 	// Update is called once per frame

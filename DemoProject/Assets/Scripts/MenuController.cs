@@ -37,63 +37,11 @@ public class MenuController : MonoBehaviour {
 		rhythm = "";
 		noteCount = 0;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		//inputField.text = rhythm;
-	}
-
-	public void AddQuarterNote(){
-		if (noteCount < 3) {
-			if (noteCount > 0)
-				rhythm += " ";
-			rhythm += "4n";
-			notes [noteCount].sprite = quarterNote;
-			noteCount++;
-		}
-	}
-
-	public void AddEighthNotes(){
-		if (noteCount < 3) {
-			if (noteCount > 0)
-				rhythm += " ";
-			rhythm += "8n 8n";
-			notes [noteCount].sprite = eighthNotes;
-			noteCount++;
-		}
-	}
-
-	public void ClearEntries(){
-		phrase = new string[3];
-		displayOrder = new int[6];
-		displayOrderLen = 0;
-		rhythm = "";
-		noteCount = 0;
-		foreach (Image img in notes){
-			img.sprite = emptySlot;
-		}
-		foreach (InputField input in words){
-			input.text = "";
-		}
-
-	}
 
 	public void StartGame(){
-		//if (noteCount == 0)
-	//		return;
-		
-		/*for (int i = 0; i < noteCount; i++){
-			phrase [i] = words [i].text;
-			displayOrder [displayOrderLen++] = i;
-
-			if (notes [i].sprite.Equals (eighthNotes)) {
-				displayOrder [displayOrderLen++] = i;
-			}
-		}*/
-
 		switch (dp.value) {
 		case 0:
-			bpm = 55;
+			bpm = 60;
 			break;
 		case 1:
 			bpm = 65;
@@ -102,12 +50,14 @@ public class MenuController : MonoBehaviour {
 			bpm = 75;
 			break;
 		}
-		//gameNum = noteCount == 2 ? 1 : 0;
-		//rhythm += " 4r";
+
+		rhythm += "8n 8n 4n";
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
 
+	/* Called by DBScript NOT IN USE*/
+	/*
 	public static void StartGame(string r, string p, int b){
 		string[] rSplit = r.Replace("8n 8n", "8n8n").Split(' ');
 		string[] pSplit = p.Split(' ');
@@ -126,7 +76,7 @@ public class MenuController : MonoBehaviour {
 		rhythm = r + " 4r";
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
-	}
+	}*/
 
     public void QuitGame(){
 		Application.Quit();

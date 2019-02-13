@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\LogManager.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
      <Compile Include="Assets\Scripts\MusicElement.cs" />
+     <Compile Include="Assets\Scripts\RandomExtensions.cs" />
      <Compile Include="Assets\Scripts\RhythmLoader.cs" />
      <Compile Include="Assets\Scripts\SavWav.cs" />
      <Compile Include="Assets\Scripts\TextController.cs" />

@@ -72,11 +72,7 @@ namespace Assets.Scripts
 			numCyc = (int) (msTimeLim / msRhythmDuration) + 4;
 			qNoteDur = new MusicElement("Quarter_Note").GetNoteDuration((int)bpm);
 			for (int i = 0; i < numCyc; i++) {
-				if (DBScript.arrhythmicMode) {
-					restDurations.Add (UnityEngine.Random.Range (0.6f * qNoteDur, 1.4f * qNoteDur));
-				} else {
-					restDurations.Add (qNoteDur);
-				}
+				restDurations.Add (qNoteDur);
 			}
 		}
 			
@@ -86,12 +82,7 @@ namespace Assets.Scripts
 			for (int i = 0; i < numCyc; i++) {
 				for (int j = 0; j <= MenuController.gameNum + 1; j++) {
 					tickTimes.Add (time);
-
-					if (j == MenuController.gameNum + 1) {
-						time += restDurations [i];
-					} else {
-						time += qNoteDur;
-					}
+					time += qNoteDur;
 				}
 			}
 			return tickTimes;
