@@ -18,12 +18,12 @@ public class TextController : MonoBehaviour {
 	public Text MoreText;
 	// Use this for initialization
 	void Start () {
-		TNBText.text = DrumController.TNBText.ToString ();
-		OnsetScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
-		AvgScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
-		FAText.text = DrumController.FAText.ToString ();
-		NOHText.text = DrumController.NOHText.ToString ();
-		NOMText.text = DrumController.NOMText.ToString ();
+		//TNBText.text = DrumController.TNBText.ToString ();
+		//OnsetScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
+		//AvgScoreText.text = DrumController.OnsetScoreText.ToString ("0.00");
+		//FAText.text = DrumController.FAText.ToString ();
+		//NOHText.text = DrumController.NOHText.ToString ();
+		//NOMText.text = DrumController.NOMText.ToString ();
 	}
 	
 	// Update is called once per frame

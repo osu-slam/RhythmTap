@@ -20,6 +20,7 @@ public class DrumController : MonoBehaviour {
     //public Text scoreText;
     public Text countdownText;
 	public Text promptText;
+	public Text pressToContinueText;
 	public Text[] phraseSections;
 	public Image[] phraseBackgrounds;
 	public GameObject microphone;
@@ -53,16 +54,19 @@ public class DrumController : MonoBehaviour {
 	int tickListCounter = 0;
 
 	int numCycles = 0;
-	static int MAX_CYCLES = 4;
+	static int MAX_CYCLES = 3;
 	float offset = 0f;
-	bool audioPlayed = false;
+	int audioPlayed = 0;
 	bool micActive = false;
 	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
 
+	float waitTimeStart = -1f;
+	float waitTimeEnd = 0.0f;
 
 	void Start () {
 		/* Initialize variables */
-
+		waitTimeStart = -1f;
+		waitTimeEnd = 0.0f;
 		// Scoring variables
 		OnsetScoreText = 0.0f;
 		FAText = 0;											// Number of false alarms
@@ -93,7 +97,7 @@ public class DrumController : MonoBehaviour {
 
 
         /* Load rhythms if in rhythmic */
-		if (!DBScript.arrhythmicMode) {
+		if (DBScript.rhythmicMode) {
 			RhythmLoader rhythmLoader = new RhythmLoader ();
 			rhythmLoader.LoadRhythm (MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
@@ -113,13 +117,6 @@ public class DrumController : MonoBehaviour {
 				phraseSections [i].text = phrase [i];
 		}*/
 
-		/* Rearrange drum and microphone sprites */
-		if (!DBScript.arrhythmicMode) {
-			Vector3 micPos = microphone.transform.position;
-			Vector3 drumPos = drum.transform.position;
-			microphone.transform.position = new Vector3(-2, micPos.y, 0);
-			drum.transform.position = new Vector3(2, drumPos.y, 0);
-		}
 
 		/* Shuffle voice prompts for randomization */
 		System.Random rnd = new System.Random();
@@ -139,31 +136,74 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
-			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8) {
+			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 12) {
+				//if (waitTimeStart < 0) {
+				//	waitTimeStart = Time.timeSinceLevelLoad;
+				//	pressToContinueText.text = "Press N to Continue";
+				//}
+				pressToContinueText.text = "Press N to Continue";
+				if (!Input.GetKeyDown (KeyCode.N)) {
+					return;
+				}
+				pressToContinueText.text = "";
+				//waitTimeEnd = Time.timeSinceLevelLoad;
+
+				launchTime = Time.timeSinceLevelLoad;
+				stdListCounter = 0;
+				tickListCounter = 0;
 				microphone.SetActive (false);
-				if(!DBScript.arrhythmicMode) drum.SetActive (false);
+				drum.SetActive (false);
 
 				numCycles++;
-				offset = numCycles * beat * 8;
+				offset = 0;
+				//offset = (numCycles * beat * 12) + (waitTimeEnd - waitTimeStart);
+				 
+				audioPlayed = 0;
 
-				audioPlayed = false;
 				return;
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 6) {
 				countdownText.text = "";
-				microphone.SetActive (true);
-				if(!DBScript.arrhythmicMode) drum.SetActive (true);
+
+				// Display icons
+				if (numCycles == 0) { // Tapping
+					Vector3 drumPos = drum.transform.position;
+					drum.transform.position = new Vector3(0, drumPos.y, 0);
+					drum.SetActive (true);
+				} else if (numCycles == 1) { // Tapping and speaking
+					Vector3 micPos = microphone.transform.position;
+					Vector3 drumPos = drum.transform.position;
+					microphone.transform.position = new Vector3(-2, micPos.y, 0);
+					drum.transform.position = new Vector3(2, drumPos.y, 0);
+					drum.SetActive (true);
+					microphone.SetActive (true);
+				} else { // Speaking
+					Vector3 micPos = microphone.transform.position;
+					microphone.transform.position = new Vector3(0, micPos.y, 0);
+					microphone.SetActive (true);
+				}
+				//microphone.SetActive (true);
+				//if(DBScript.rhythmicMode) drum.SetActive (true);
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
 				UpdateCountDownText ();
+				if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2 && audioPlayed == 1) {
+					voice = voices_60bpm [numCycles];
+					voice.Play ();
+					audioPlayed = 2;
+				} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4 && audioPlayed == 2) {
+					voice = voices_60bpm [numCycles];
+					voice.Play ();
+					audioPlayed = 3;
+				}
 			} else {
 				if (micActive) {
 					Microphone.End (Microphone.devices[0]);
 					micActive = false;
 				}
 
-				if (!audioPlayed) {
+				if (audioPlayed == 0) {
 					voice = voices_60bpm [numCycles];
 					voice.Play ();
-					audioPlayed = true;
+					audioPlayed = 1;
 				}
 			}
 		} else {
@@ -171,7 +211,7 @@ public class DrumController : MonoBehaviour {
 		}
 
 
-		if(!DBScript.arrhythmicMode) UpdateDrumPrompt ();
+		if(DBScript.rhythmicMode) UpdateDrumPrompt ();
 
 		if (hasEnded){
 			if (endScreenTime > 0.0f) {
@@ -289,7 +329,13 @@ public class DrumController : MonoBehaviour {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}*/
-		SceneManager.LoadScene ("RhythmSelection");
+		if (!DBScript.rhythmicMode) {
+			// Hide voice scores from analysis
+			SceneManager.LoadScene ("Analysis2");
+		} else {
+			SceneManager.LoadScene ("Analysis");
+		}
+
 	}
 
 	void LoadAnalysis(){

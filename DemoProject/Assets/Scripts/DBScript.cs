@@ -13,8 +13,8 @@ public class DBScript : MonoBehaviour {
 	public Dropdown rhythmDropdown;
 	public Dropdown bpmDropdown;
 	public InputField[] words;
-	public Toggle arrhythmicToggle;
-	public static bool arrhythmicMode;
+	public Toggle rhythmToggle;
+	public static bool rhythmicMode;
 
 	void Start () {
 		/*dbPath = "URI=file:" + Application.persistentDataPath + "/rhythmTap.db";
@@ -172,7 +172,7 @@ public class DBScript : MonoBehaviour {
 	}
 
 	void Update(){
-		if(arrhythmicToggle != null)
-			arrhythmicMode = arrhythmicToggle.isOn;
+		if(rhythmToggle != null)
+			rhythmicMode = rhythmToggle.isOn;
 	}
 }
