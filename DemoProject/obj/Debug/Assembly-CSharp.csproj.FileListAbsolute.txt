@@ -30,3 +30,7 @@ C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Temp\bin\Debug\UnityEngine.
 C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\obj\Debug\Assembly-CSharp.dll
 C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\obj\Debug\Assembly-CSharp.pdb
+C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Temp\bin\Debug\Mono.Data.Sqlite.dll
+C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Temp\bin\Debug\Mono.Data.SqliteClient.dll
+C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Temp\bin\Debug\System.Data.dll
+C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject\Temp\bin\Debug\System.EnterpriseServices.dll

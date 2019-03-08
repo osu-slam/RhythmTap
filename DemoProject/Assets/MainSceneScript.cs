@@ -16,6 +16,6 @@ public class MainSceneScript : MonoBehaviour {
 	}
 
 	public void LoadMenu(){
-		SceneManager.LoadScene("Menu");
+		SceneManager.LoadScene("RhythmSelection");
 	}
 }

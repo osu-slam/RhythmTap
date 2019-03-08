@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -9,153 +11,119 @@ using Assets.Scripts.TextureStorage;
 public class DrumController : MonoBehaviour {
 	private const float NaN = 0.0f / 0;
 	public float bpm = 0f; //default
-	private static int BeatsPerMeasure = 4;
 
 	public AudioSource Clave;
 	public AudioSource WoodBlock;
-	public AudioSource SingleStickSfx;
-    public AudioSource game0Audio;
+	public AudioSource[] voices_60bpm;
+	AudioSource voice;
 
     //public Text scoreText;
     public Text countdownText;
 	public Text promptText;
-	public Text phraseText;
-	bool analyzed = false;
+	public Text[] phraseSections;
+	public Image[] phraseBackgrounds;
+	public GameObject microphone;
+	public GameObject drum;
+	//bool analyzed = false;
 
-
-	//float variance;
-	public List<float> list;
+	public List<float> keyDownList;
 	public List<float> stdList;
+	public List<float> tickList;
 	public List<float> halfNotes;
-	private List<float> stdDuration;
-	bool hasStarted = false;
+
 	bool hasEnded = false;
-	bool hasLaunched = false;
-	bool hasPlayed = false;
 
-	float startTime = 0.0f;
 	float launchTime = 0.0f;
-
 	float nextMetronomeBeat;
 	float dspTime;
-
-	int numberOfHits = 0;
 	static float lengthOfAudio;
-
-	float countDownTime;
-
 	float error = 0.1f;
 	float beat = 0;
-	float drumHighlightBreak = 0.05f;
 
 	public static int TNBText = 8;
 	public static float OnsetScoreText = 0.0f;
-	public static float AvgScoreText = 0.0f;
 	public static int FAText = 0;
 	public static int NOHText = 0;
-	public static float DurScoreText = 0;
 	public static int NOMText = 0;
-	public static int LessText = 0;
-	public static int MoreText = 0;
 
-	SpriteRenderer sr;
 	private static EndScreenController endScreenController;
 	private float endScreenTime;
-	int i = 0;
-	int j = 0;
-	int totalBeats;
 
-	private string[] phraseTokens;
-	private int numTokens = 0;
+	int stdListCounter = 0;
+	int tickListCounter = 0;
 
-	// Use this for initialization
+	int numCycles = 0;
+	static int MAX_CYCLES = 4;
+	float offset = 0f;
+	bool audioPlayed = false;
+	bool micActive = false;
+	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
+
+
 	void Start () {
+		/* Initialize variables */
+
+		// Scoring variables
+		OnsetScoreText = 0.0f;
+		FAText = 0;											// Number of false alarms
+		NOHText = 0;										// Number of hits
+		NOMText = 0;										// Number of misses
+
+		// Time-related variables
+		bpm = (float)MenuController.bpm;
+		lengthOfAudio = 60.0f;								// In seconds
+		beat = 60.0f/bpm;									// Duration of each beat
+		nextMetronomeBeat = (float)(launchTime + beat);
+		launchTime = Time.timeSinceLevelLoad; 				// Time the game starts
+
+		// Other variables
+		countdownText.text = "";
+		keyDownList = new List<float> ();
+	
+
+		/* Load but hide end screen */
 		endScreenController = new EndScreenController ();
 		endScreenController.Disable ();
 		endScreenTime = 0.0f;
-		sr = GetComponent<SpriteRenderer> ();
-		bpm = (float)MenuController.bpm;
-		phraseTokens = MenuController.phrase.Split (' ');
-		if (phraseTokens.Length > 0 && phraseTokens[0].Length > 0) {
-			switch (MenuController.gameNum) {
-			case 0:
-				numTokens = 1;
-				break;
-			case 1:
-				numTokens = 2;
-				break;
-			case 2:
-				numTokens = 3;
-				break;
-			default:
-				numTokens = 0;
-				break;
-			}
-		}
 
+
+		/* Avoid unnecessary logs when debugging*/
 		if(MenuController.debug == false)
 			LogManager.Instance.LogSessionStart (bpm, MenuController.gameNum);
 
-		if (MenuController.impromptu == false) {
-			analyzed = false;
 
-			//LogManager.Instance.LogSessionStart (bpm);
-
-			list = new List<float> ();
-			//Set total num of beats based on current bpm selected;
-			lengthOfAudio = 60.0f;//in seconds
-			beat = 60.0f/bpm;
-			nextMetronomeBeat = (float)(AudioSettings.dspTime + beat);
-			dspTime = (float)(AudioSettings.dspTime);
-			totalBeats = (int)(bpm / 4) * 4 + 8;
-
-			if (MenuController.gameNum == 1)
-				BeatsPerMeasure = 3;
-			else
-				BeatsPerMeasure = 4;
-
-			stdList = new List<float> ();
-
-            /* Testing */
-            RhythmLoader rhythmLoader = new RhythmLoader();
-			rhythmLoader.LoadRhythm(MenuController.rhythm, bpm, lengthOfAudio);
+        /* Load rhythms if in rhythmic */
+		if (!DBScript.arrhythmicMode) {
+			RhythmLoader rhythmLoader = new RhythmLoader ();
+			rhythmLoader.LoadRhythm (MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
-			stdDuration = rhythmLoader.GetNoteDurations ((int)bpm);
-
-			/* init */
-			countdownText.text = "";
-			hasLaunched = false;
-			hasStarted = false;
-			hasPlayed = false;
-			numberOfHits = 0;
-
-			OnsetScoreText = 0.0f;
-			AvgScoreText = 0.0f;
-			FAText = 0;
-			NOHText = 0;
-			DurScoreText = 0;
-			NOMText = 0;
-			MoreText = 0;
-			LessText = 0;
-
-			countDownTime = 0.0f;
-			launchTime = Time.timeSinceLevelLoad;
-			startTime = 0.0f;
+			tickList = rhythmLoader.GetTickTimes ();
 		} else {
-			countdownText.text = "";
-			lengthOfAudio = 60.0f;
-			//LogManager.Instance.LogSessionStart (bpm);
-			launchTime = Time.timeSinceLevelLoad;
-			hasLaunched = false;
+			stdList = new List<float> ();
+			tickList = new List<float> ();
 		}
-		//StartAudio ();
-		Clave.Play();
-		totalBeats--;
-	}
 
-	void StartAudio(){
-		RhythmSoundStorage.GetAudio (game0Audio);
-		game0Audio.Play ();
+		/* Populate phrase prompt */
+		/* NOT IN USE */
+		/*string[] phrase = MenuController.phrase;
+		for (int i = 0; i < phrase.Length; i++) {
+			if (phrase [i] == null || phrase [i].Equals (""))
+				phraseBackgrounds [i].enabled = false;
+			else
+				phraseSections [i].text = phrase [i];
+		}*/
+
+		/* Rearrange drum and microphone sprites */
+		if (!DBScript.arrhythmicMode) {
+			Vector3 micPos = microphone.transform.position;
+			Vector3 drumPos = drum.transform.position;
+			microphone.transform.position = new Vector3(-2, micPos.y, 0);
+			drum.transform.position = new Vector3(2, drumPos.y, 0);
+		}
+
+		/* Shuffle voice prompts for randomization */
+		System.Random rnd = new System.Random();
+		voices_60bpm = voices_60bpm.OrderBy(x => rnd.Next()).ToArray();  
 	}
 
 	// Update is called once per frame
@@ -165,61 +133,45 @@ public class DrumController : MonoBehaviour {
 		}
 
 		if (MenuController.impromptu == false) {
-
-			/*if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
-			{
-				Clave.Play();
-				nextMetronomeBeat += beat;
-			}*/
-
 			UpdateRegularPlayMode ();
 		}
 	}
 
 	void UpdateRegularPlayMode(){
-		int numIntroBeats = BeatsPerMeasure * 2;
-		int numCountdownBeats = 6;
-		float timeBeforeCountdown = (numIntroBeats - numCountdownBeats) * beat;
-		float introLen = numIntroBeats * beat;
+		if (numCycles < MAX_CYCLES) {
+			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8) {
+				microphone.SetActive (false);
+				if(!DBScript.arrhythmicMode) drum.SetActive (false);
 
-		if (Time.timeSinceLevelLoad - launchTime > timeBeforeCountdown && !hasLaunched) {
-			StartCountDown (); //hasLaunched = true
-		}
+				numCycles++;
+				offset = numCycles * beat * 8;
 
-		if (!hasEnded) {
-			if (!hasPlayed && hasLaunched) {
-				UpdateCountDownText (); //hasStarted = true
-
-				if (Time.timeSinceLevelLoad - countDownTime > introLen) {
-					hasPlayed = true;
-					StartPlayingSession (); //set startTime
-				}
-				if (Time.timeSinceLevelLoad - startTime > lengthOfAudio + introLen) {
-					EndPlayingSession (introLen); //hasEnded = true
-				}
+				audioPlayed = false;
+				return;
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 6) {
+				countdownText.text = "";
+				microphone.SetActive (true);
+				if(!DBScript.arrhythmicMode) drum.SetActive (true);
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
+				UpdateCountDownText ();
 			} else {
-				if (Time.timeSinceLevelLoad - launchTime > lengthOfAudio + introLen) {
-					EndPlayingSession (introLen); //hasEnded = true
+				if (micActive) {
+					Microphone.End (Microphone.devices[0]);
+					micActive = false;
+				}
+
+				if (!audioPlayed) {
+					voice = voices_60bpm [numCycles];
+					voice.Play ();
+					audioPlayed = true;
 				}
 			}
+		} else {
+			EndPlayingSession ();
 		}
-		UpdateDrumHighlight (introLen);
-		UpdateDrumPrompt ();
 
-		if (hasStarted && !hasEnded) {
-			if (Input.GetKeyDown (KeyCode.Space))
-				UpdateKeyDown ();
-			else if (Input.GetKeyUp (KeyCode.P))
-				EndPlayingSession (introLen);
 
-			if (Input.touchCount > 0) {
-				switch(Input.GetTouch(0).phase){
-				case TouchPhase.Began:
-					UpdateKeyDown ();
-					break;
-				}
-			}
-		}
+		if(!DBScript.arrhythmicMode) UpdateDrumPrompt ();
 
 		if (hasEnded){
 			if (endScreenTime > 0.0f) {
@@ -233,36 +185,29 @@ public class DrumController : MonoBehaviour {
 	}
 
 	//analizing timestamps after finishing the song
-	void PerformanceAnalysis(float introLen){
-		TNBText = i;
+	void PerformanceAnalysis(){
+		TNBText = 0; //TODO: Temporarily set to zero
 		int stdListIndex = 0; //index for stdList
 		int listIndex = 0; //index for list
 
-		while (stdListIndex < TNBText && listIndex < list.Count) {
-			float upper = stdList [stdListIndex] + error + introLen;
-			float lower = stdList [stdListIndex] - error + introLen;
-			if (list [listIndex] < upper && list [listIndex] > lower) {
+		while (stdListIndex < TNBText && listIndex < keyDownList.Count) {
+			float upper = stdList [stdListIndex] + error;
+			float lower = stdList [stdListIndex] - error;
+			if (keyDownList [listIndex] < upper && keyDownList [listIndex] > lower) {
 				if (MenuController.debug == false) {
-					LogManager.Instance.Log (stdList [stdListIndex], 
-						list [listIndex] - introLen, 
-						//stdDuration [stdListIndex], 
-						//duration [listIndex], 
-						stdListIndex);
+					LogManager.Instance.Log (stdList [stdListIndex], keyDownList [listIndex], stdListIndex);
 				}
-
-				//update onset accuracy score
-				numberOfHits++;
-				//increment
+					
+				NOHText++;
 				stdListIndex++;
 				listIndex++;
-			} else if (list [listIndex] > upper) {
-				//miss
+			} else if (keyDownList [listIndex] > upper) {
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (stdList [stdListIndex], NaN, /*stdDuration [stdListIndex], 0,*/ stdListIndex);
+					LogManager.Instance.Log (stdList [stdListIndex], NaN, stdListIndex);
 				stdListIndex++;
 			} else {
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (NaN, list [listIndex] - introLen, /*NaN, duration [listIndex],*/ -1);
+					LogManager.Instance.Log (NaN, keyDownList [listIndex], -1);
 				listIndex++;
 				FAText++;
 			}
@@ -271,137 +216,83 @@ public class DrumController : MonoBehaviour {
 		//log remaining data
 		while (stdListIndex < TNBText) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (stdList [stdListIndex], NaN, /*stdDuration [stdListIndex], 0,*/ stdListIndex);
+				LogManager.Instance.Log (stdList [stdListIndex], NaN, stdListIndex);
 			stdListIndex++;
 		}
 
-		while (listIndex < list.Count) {
+		while (listIndex < keyDownList.Count) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (NaN, list [listIndex] - introLen,/* NaN, duration [listIndex],*/ -1);
+				LogManager.Instance.Log (NaN, keyDownList [listIndex], -1);
 			listIndex++;
 			FAText++;
 		}
 
-		NOHText = numberOfHits;
 		NOMText = TNBText - NOHText;
 		OnsetScoreText = (float)(NOHText * 100) / TNBText;
-		//AvgScoreText = ((OnsetScoreText + DurScoreText) / 2.0f) - FAText;
 
 		if (MenuController.debug == false) {
-			//LogManager.Instance.Log ("AverageScore", AvgScoreText.ToString ());
-
 			LogManager.Instance.Log ("OnsetScore", OnsetScoreText.ToString ());
 			LogManager.Instance.Log ("NumberOfHits", NOHText.ToString ());
 			LogManager.Instance.Log ("NumberOfMisses", NOMText.ToString ());
 			LogManager.Instance.Log ("NumberOfFalseAlarms", FAText.ToString ());
 			LogManager.Instance.Log ("TotalNumberOfBeats", TNBText.ToString ());
-
-			//LogManager.Instance.Log ("DurationScore", DurScoreText.ToString ());
-			//LogManager.Instance.Log ("> ExpDuration", MoreText.ToString ());
-			//LogManager.Instance.Log ("<= ExpDuration", LessText.ToString ());
-		}
-	}
-
-	void StartCountDown(){
-		countDownTime = Time.timeSinceLevelLoad;
-		countdownText.text = "5";
-		hasLaunched = true;
-	}
-
-	void UpdateDrumHighlight(float introLen){
-		if (i < stdList.Count) {
-			float time;
-			time = stdList [i] + introLen;
-			if (!HighlightDrum (time, stdDuration[i], introLen))
-				i++;
 		}
 	}
 
 	void UpdateDrumPrompt(){
-		if (j < stdList.Count && AudioSettings.dspTime >= dspTime + stdList [j]) {
+		if (stdListCounter < stdList.Count && Time.timeSinceLevelLoad >= launchTime + stdList [stdListCounter]) {
 			WoodBlock.Play ();
-			if (numTokens > 0)
-				phraseText.text = phraseTokens [(j) % numTokens];
-			
-			j++;
+			stdListCounter++;
 		}
-		if (AudioSettings.dspTime >= nextMetronomeBeat && totalBeats-- > 0)
-		{
-			
+		if (tickListCounter < tickList.Count && Time.timeSinceLevelLoad >= launchTime + tickList [tickListCounter]) {
 			Clave.Play ();
-			nextMetronomeBeat += beat;
+			tickListCounter++;
 		}
-	}
-
-	bool HighlightDrum(float time, float duration, float offset){
-		float upperBound = time + duration - drumHighlightBreak;
-		float lowerBound = time + 0.05f;
-		if (Time.timeSinceLevelLoad > lowerBound && Time.timeSinceLevelLoad < upperBound) {
-			sr.color = Color.gray;
-		} else {
-			sr.color = Color.white;
-		}
-		
-		if (Time.timeSinceLevelLoad >= upperBound)
-			return false;
-		else
-			return true;
 	}
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - countDownTime > 6 * beat) {
-			countdownText.text = "";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 5 * beat) {
+		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 5) {
 			countdownText.text = "Go!";
-			hasStarted = true;
-		} else if (Time.timeSinceLevelLoad - countDownTime > 4 * beat) {
+			if (!micActive) {
+				audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
+				micActive = true;
+			}
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4) {
 			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 3 * beat) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3) {
 			countdownText.text = "2";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 2 * beat) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
 			countdownText.text = "3";
-		} else if (Time.timeSinceLevelLoad - countDownTime > 1 * beat) {
-			countdownText.text = "4";
 		}
-	}
-
-	void StartPlayingSession(){
-		startTime = Time.timeSinceLevelLoad;
 	}
 
 	void UpdateKeyDown(){
 		//add timestamp to the list
-		list.Add (Time.timeSinceLevelLoad - launchTime);
-
-		//play sound clip
-		SingleStickSfx.Play ();
+		keyDownList.Add (Time.timeSinceLevelLoad - launchTime);
 	}
 
-	void EndPlayingSession(float introLen){
+	void EndPlayingSession(){
 		hasEnded = true;
 
-		if (MenuController.gameNum != 3) {
-			endScreenController.Enable ();
-			endScreenTime = Time.timeSinceLevelLoad;
+		endScreenController.Enable ();
+		endScreenTime = Time.timeSinceLevelLoad;
 
-			if (analyzed == false) {
-				PerformanceAnalysis (introLen);
-				analyzed = true;
-			}
-		} else {
-			SceneManager.LoadScene ("Menu");
+		for (int i = 0; i < MAX_CYCLES; i++) {
+			string filename = WelcomeController.name + i + "_" +
+				DateTime.Now.Month.ToString() + "_" + 
+				DateTime.Now.Day.ToString() + "_" + 
+				DateTime.Now.Hour.ToString() + "_" + 
+				DateTime.Now.Minute.ToString();
+			SavWav.Save (filename, audioClip[i]);
 		}
+		/**if (analyzed == false) {
+			PerformanceAnalysis ();
+			analyzed = true;
+		}*/
+		SceneManager.LoadScene ("RhythmSelection");
 	}
 
 	void LoadAnalysis(){
 		SceneManager.LoadScene ("Analysis");
-	}
-
-	void PromptMenu(){
-		hasEnded = true;
-		promptText.text = "Press space to continue";
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			SceneManager.LoadScene ("Menu");
-		} 
 	}
 }
