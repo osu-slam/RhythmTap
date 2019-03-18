@@ -1,0 +1,15 @@
+﻿<Properties StartupConfiguration="{DBE53C73-5E64-55EF-9E88-6C47A9A49BF7}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DrumController.cs">
+    <Files>
+      <File FileName="Assets/WelcomeController.cs" Line="16" Column="5" />
+      <File FileName="Assets/Scripts/DrumController.cs" Line="126" Column="11" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

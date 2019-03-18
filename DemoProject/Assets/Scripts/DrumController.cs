@@ -172,8 +172,9 @@ public class DrumController : MonoBehaviour {
 				} else if (numCycles == 1) { // Tapping and speaking
 					Vector3 micPos = microphone.transform.position;
 					Vector3 drumPos = drum.transform.position;
-					microphone.transform.position = new Vector3(-2, micPos.y, 0);
-					drum.transform.position = new Vector3(2, drumPos.y, 0);
+					microphone.transform.position = new Vector3(2.0f, 0.4f, 0);
+                    microphone.transform.localScale = new Vector3(0.13f, 0.13f, 0.13f);
+                    drum.transform.position = new Vector3(0, drumPos.y, 0);
 					drum.SetActive (true);
 					microphone.SetActive (true);
 				} else { // Speaking

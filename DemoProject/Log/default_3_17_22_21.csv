@@ -1,0 +1,7 @@
+Session,Start,03/17/2019 22:21:18,
+Game Number,0,
+BPM,60.0000,
+Onset Error,± 0.1,
+Duration Threshold,0.85,
+Response Lag,0.15,
+Index,Onset_Expected, Onset_Actual, Onset_Diff,Dur_Expected, Dur_Actual, Dur_Diff,
