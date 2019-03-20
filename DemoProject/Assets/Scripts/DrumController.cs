@@ -179,8 +179,8 @@ public class DrumController : MonoBehaviour {
 					microphone.SetActive (true);
 				} else { // Speaking
 					Vector3 micPos = microphone.transform.position;
-                    microphone.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-                    microphone.transform.position = new Vector3(0, -0.5f, 0);
+                    microphone.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+					microphone.transform.position = drum.transform.position;
 					microphone.SetActive (true);
 				}
 				//microphone.SetActive (true);
