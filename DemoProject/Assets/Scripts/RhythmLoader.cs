@@ -9,8 +9,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class RhythmLoader
-    {
+	public class RhythmLoader : MonoBehaviour {
         List<MusicElement> musicElements;
 		List<float> times;
 		List<float> tickTimes;

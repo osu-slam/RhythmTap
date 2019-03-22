@@ -1,10 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\DrumController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.AttachToProcess" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\RhythmLoader.cs">
     <Files>
-      <File FileName="Assets\Scripts\DrumController.cs" Line="145" Column="6" />
+      <File FileName="Assets\Scripts\DrumController.cs" Line="105" Column="22" />
       <File FileName="Assets\Scripts\EndScreenController.cs" Line="10" Column="1" />
-      <File FileName="Assets\Scripts\MenuController.cs" Line="8" Column="46" />
+      <File FileName="Assets\Scripts\MenuController.cs" Line="8" Column="1" />
+      <File FileName="Assets\Scripts\RhythmLoader.cs" Line="21" Column="14" />
+      <File FileName="Assets\Scripts\MusicElement.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
