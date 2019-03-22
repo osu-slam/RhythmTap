@@ -25,6 +25,7 @@ public class DrumController : MonoBehaviour {
 	public Image[] phraseBackgrounds;
 	public GameObject microphone;
 	public GameObject drum;
+	public GameObject nextButton;
 	//bool analyzed = false;
 
 	public List<float> keyDownList;
@@ -58,6 +59,7 @@ public class DrumController : MonoBehaviour {
 	float offset = 0f;
 	int audioPlayed = 0;
 	bool micActive = false;
+	bool nextButtonPressed = false;
 	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
 
 	float waitTimeStart = -1f;
@@ -137,15 +139,12 @@ public class DrumController : MonoBehaviour {
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
 			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 12) {
-				//if (waitTimeStart < 0) {
-				//	waitTimeStart = Time.timeSinceLevelLoad;
-				//	pressToContinueText.text = "Press N to Continue";
-				//}
-				pressToContinueText.text = "Press N to Continue";
-				if (!Input.GetKeyDown (KeyCode.N)) {
+				nextButton.SetActive (true);
+				if (!nextButtonPressed) {
 					return;
 				}
-				pressToContinueText.text = "";
+				nextButtonPressed = false;
+
 				//waitTimeEnd = Time.timeSinceLevelLoad;
 
 				launchTime = Time.timeSinceLevelLoad;
@@ -167,19 +166,17 @@ public class DrumController : MonoBehaviour {
 				// Display icons
 				if (numCycles == 0) { // Tapping
 					Vector3 drumPos = drum.transform.position;
-					drum.transform.position = new Vector3(0, drumPos.y, 0);
+					drum.transform.position = new Vector3(drumPos.x, drumPos.y, 0);
 					drum.SetActive (true);
 				} else if (numCycles == 1) { // Tapping and speaking
-					Vector3 micPos = microphone.transform.position;
 					Vector3 drumPos = drum.transform.position;
-					microphone.transform.position = new Vector3(2.0f, 0.4f, 0);
-                    microphone.transform.localScale = new Vector3(0.13f, 0.13f, 0.13f);
-                    drum.transform.position = new Vector3(0, drumPos.y, 0);
+                    microphone.transform.localScale = new Vector3(7f, 7f, 1f);
+					microphone.transform.localPosition = new Vector3(140f, 80f, 0);
+					drum.transform.position = new Vector3(drumPos.x, drumPos.y, 0);
 					drum.SetActive (true);
 					microphone.SetActive (true);
 				} else { // Speaking
-					Vector3 micPos = microphone.transform.position;
-                    microphone.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+                    microphone.transform.localScale = new Vector3(20f, 20f, 1f);
 					microphone.transform.position = drum.transform.position;
 					microphone.SetActive (true);
 				}
@@ -198,7 +195,7 @@ public class DrumController : MonoBehaviour {
 				}
 			} else {
 				if (micActive) {
-					Microphone.End (Microphone.devices[0]);
+					//Microphone.End (Microphone.devices[0]);
 					micActive = false;
 				}
 
@@ -207,11 +204,11 @@ public class DrumController : MonoBehaviour {
 					voice.Play ();
 					audioPlayed = 1;
 				}
+				nextButton.SetActive (false);
 			}
 		} else {
 			EndPlayingSession ();
 		}
-
 
 		if(DBScript.rhythmicMode) UpdateDrumPrompt ();
 
@@ -296,7 +293,7 @@ public class DrumController : MonoBehaviour {
 		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 5) {
 			countdownText.text = "Go!";
 			if (!micActive) {
-				audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
+				//audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
 				micActive = true;
 			}
 		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4) {
@@ -325,7 +322,7 @@ public class DrumController : MonoBehaviour {
 				DateTime.Now.Day.ToString() + "_" + 
 				DateTime.Now.Hour.ToString() + "_" + 
 				DateTime.Now.Minute.ToString();
-			SavWav.Save (filename, audioClip[i]);
+			//SavWav.Save (filename, audioClip[i]);
 		}
 		/**if (analyzed == false) {
 			PerformanceAnalysis ();
@@ -342,5 +339,9 @@ public class DrumController : MonoBehaviour {
 
 	void LoadAnalysis(){
 		SceneManager.LoadScene ("Analysis");
+	}
+
+	public void NextButtonPressed(){
+		nextButtonPressed = true;
 	}
 }
