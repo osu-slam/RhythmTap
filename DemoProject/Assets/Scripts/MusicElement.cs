@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class MusicElement
+	public class MusicElement : MonoBehaviour
     {
 		private enum ElementType {Quarter_Note, Eighth_Note, Eighth_Note_T, Quarter_Rest, Eighth_Rest};
         private ElementType EleType { get; set; }

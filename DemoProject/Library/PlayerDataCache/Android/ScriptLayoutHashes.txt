@@ -3,7 +3,6 @@ PlayerPath?
 C:/Users/kathy/Desktop/Therabeat.apk
 SceneListBegin?
 Assets/Welcome Scene.unity
-Assets/Menu.unity
 Assets/MainScene.unity
 Assets/Analysis.unity
 Assets/Analysis2.unity
@@ -124,6 +123,7 @@ d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.Spa
 fa48cfb4a9221b7c597b42dd2f9fdd1c Assembly-CSharp.dll:.DBScript
 94017dcc9f00fe671ea7dc427b4da011 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:Assets.Scripts.MusicElement
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.Analytics.Editor.dll:UnityEditor.Analytics.AnalyticsEventTrackerEditor
 f344eb6314bef312c2cc3f67a1e8d1ff Assembly-CSharp.dll:.DropDownEffect
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.TextMeshPro.dll:TMPro.TMP_SpriteAnimator

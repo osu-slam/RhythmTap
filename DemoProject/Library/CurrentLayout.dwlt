@@ -73,7 +73,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 498}
   m_MaxSize: {x: 14004, y: 14048}
   vertical: 0
-  controlID: 91
+  controlID: 53
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 498}
   m_MaxSize: {x: 10002, y: 14048}
   vertical: 1
-  controlID: 71
+  controlID: 66
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 224}
   m_MaxSize: {x: 8006, y: 4024}
   vertical: 0
-  controlID: 72
+  controlID: 67
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -263,15 +263,15 @@ MonoBehaviour:
     y: 0
     width: 780
     height: 442
-  m_MinSize: {x: 202, y: 224}
-  m_MaxSize: {x: 4002, y: 4024}
-  m_ActualView: {fileID: 16}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 16}
   - {fileID: 17}
   - {fileID: 12}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -336,19 +336,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Sound
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Sound
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 56}
-    m_SelectedIDs: 4c260000
-    m_LastClickedID: 9804
+    m_SelectedIDs: 8e280000
+    m_LastClickedID: 10382
     m_ExpandedIDs: 000000004c260000d0270000e827000076280000d82800004229000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000582b000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -431,7 +431,7 @@ MonoBehaviour:
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
-  m_DirectoriesAreaWidth: 115
+  m_DirectoriesAreaWidth: 239
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -498,7 +498,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 16eeffff38eeffff4ceeffff66efffff7eefffff98efffffa4efffff0cf0ffff20f0fffff2f0ffff0cf1ffff16f1ffff80f1ffffa2f2ffffd8f2ffff42f3ffff4cf3ffff76f3ffffa4f3ffff2cf4ffff4ef4ffff62f4ffff68f4ffff80f4ffff98f4ffffa0f4ffff08f5ffff10f5ffffaef5ffffd0f5ffffe4f5fffffcf6ffff14f7ffff2ef7ffff3af7ffffa2f7ffffb6f7ffff7ef8ffffe8f8fffff2f8ffff92fafffffefaffff2cfbffffbefbffff582e0000503c000040450000ea450000f44a0000cc4c0000
+      m_ExpandedIDs: 9ef1ffffbef1ffffd0f1ffff12f3ffff2af3ffff48f3ffff56f3ffff6af3ffff5af4ffff7af4ffff8cf4ffffb2f4ffffcaf4ffffe2f4ffffeaf4fffff2f4ffff90f5ffffbcf5ffff38f6ffffa4f6ffffb0f6ffffdcf6ffff1cf7ffff3ef7ffff50f7ffff56f7ffff6ef7ffff86f7ffff8ef7fffff6f7fffffef7ffff12f9ffff34f9ffff48f9ffff5efaffff72faffff88faffff90fafffff4faffff04fbffffbefbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -650,7 +650,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
