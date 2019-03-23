@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 548}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -42,8 +42,8 @@ MonoBehaviour:
     y: 0
     width: 260
     height: 442
-  m_MinSize: {x: 204, y: 224}
-  m_MaxSize: {x: 4004, y: 4024}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -70,10 +70,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 683, y: 498}
+  m_MinSize: {x: 679, y: 498}
   m_MaxSize: {x: 14004, y: 14048}
   vertical: 0
-  controlID: 53
+  controlID: 10
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -149,7 +149,7 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 781
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 548}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &7
 MonoBehaviour:
@@ -215,10 +215,10 @@ MonoBehaviour:
     y: 0
     width: 1040
     height: 731
-  m_MinSize: {x: 406, y: 498}
+  m_MinSize: {x: 402, y: 498}
   m_MaxSize: {x: 10002, y: 14048}
   vertical: 1
-  controlID: 66
+  controlID: 64
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -240,10 +240,10 @@ MonoBehaviour:
     y: 0
     width: 1040
     height: 442
-  m_MinSize: {x: 406, y: 224}
-  m_MaxSize: {x: 8006, y: 4024}
+  m_MinSize: {x: 402, y: 224}
+  m_MaxSize: {x: 8002, y: 4024}
   vertical: 0
-  controlID: 67
+  controlID: 44
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -263,8 +263,8 @@ MonoBehaviour:
     y: 0
     width: 780
     height: 442
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 224}
+  m_MaxSize: {x: 4002, y: 4024}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 16}
@@ -336,19 +336,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Sound
+    - Assets
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Sound
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\kathy\Documents\Unity\RhythmTap\DemoProject
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 56}
-    m_SelectedIDs: 8e280000
-    m_LastClickedID: 10382
+    m_SelectedIDs: 4c260000
+    m_LastClickedID: 9804
     m_ExpandedIDs: 000000004c260000d0270000e827000076280000d82800004229000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000582b000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -429,7 +429,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 68}
     m_GridSize: 64
   m_DirectoriesAreaWidth: 239
 --- !u!114 &14
@@ -498,7 +498,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 9ef1ffffbef1ffffd0f1ffff12f3ffff2af3ffff48f3ffff56f3ffff6af3ffff5af4ffff7af4ffff8cf4ffffb2f4ffffcaf4ffffe2f4ffffeaf4fffff2f4ffff90f5ffffbcf5ffff38f6ffffa4f6ffffb0f6ffffdcf6ffff1cf7ffff3ef7ffff50f7ffff56f7ffff6ef7ffff86f7ffff8ef7fffff6f7fffffef7ffff12f9ffff34f9ffff48f9ffff5efaffff72faffff88faffff90fafffff4faffff04fbffffbefbffff
+      m_ExpandedIDs: 80e3ffffa0e3ffffb2e3ffffd8e3fffff0e3ffff08e4ffff10e4ffff18e4ffff2ee4ffff5ae4ffffc6e4ffffd2e4ffff0ae5ffffb6e9ffff2ceaffffc0eaffff2cebffff72ebffff7eebffffaaebffff16ecffff0ef2ffff2ef2ffff44f2ffff86f3ffff9af3ffffb6f3ffffc8f3ffffccf3ffff74f4ffff94f4ffffaaf4ffffecf5ffff00f6ffff1cf6ffff2ef6ffff32f6ffffb6f6ffffe6f6ffff50f7ffff5af7ffff92f7ffffb2f7ffffc8f7ffff0af9ffff1ef9ffff3af9ffff3ef9ffff52f9ffffc0f9ffff60faffff6cfaffffbefbffff2c38000092380000dc3e0000423f0000364500003a450000a045000086490000f8490000824b0000d64b0000e84b00004e4d0000684d0000e04d0000e44d0000184e0000384e00004a4e000060500000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
