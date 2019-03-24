@@ -328,12 +328,12 @@ public class DrumController : MonoBehaviour {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}*/
-		if (!DBScript.rhythmicMode) {
+		//if (!DBScript.rhythmicMode) {
 			// Hide voice scores from analysis
-			SceneManager.LoadScene ("Analysis2");
-		} else {
+		//	SceneManager.LoadScene ("Analysis2");
+		//} else {
 			SceneManager.LoadScene ("Analysis");
-		}
+		//}
 
 	}
 

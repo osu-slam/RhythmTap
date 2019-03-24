@@ -5,7 +5,6 @@ SceneListBegin?
 Assets/Welcome Scene.unity
 Assets/MainScene.unity
 Assets/Analysis.unity
-Assets/Analysis2.unity
 Assets/RhythmSelection.unity
 SceneListEnd?
 984dcc0ba3707b7691fbdca8ff508d28 Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
