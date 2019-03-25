@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class EndScreenController :MonoBehaviour {
 	//public Sprite endScreen;
-	Image image;
+	GameObject endScreen;
 	public EndScreenController(){
-		image = GameObject.Find ("endScreen").GetComponent<Image> ();
+		endScreen = GameObject.Find ("endScreen");
 	}
 
 	public void Enable(){
-		image.enabled = true;
+		endScreen.SetActive(true);
 	}
 
 	public void Disable(){
-		image.enabled = false;
+		endScreen.SetActive (false);
 	}
 }
