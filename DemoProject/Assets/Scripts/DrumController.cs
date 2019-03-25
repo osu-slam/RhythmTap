@@ -56,6 +56,8 @@ public class DrumController : MonoBehaviour {
 
 	int numCycles = 0;
 	static int MAX_CYCLES = 3;
+	int numTurn = 0;
+	static int TURNS_PER_CYCLE = 4;
 	float offset = 0f;
 	int audioPlayed = 0;
 	bool micActive = false;
@@ -138,29 +140,31 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
-			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 12) {
-				nextButton.SetActive (true);
-				if (!nextButtonPressed) {
-					return;
+			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8 + numTurn* 8) {
+				if (numTurn == TURNS_PER_CYCLE-1) {
+					nextButton.SetActive (true);
+					if (!nextButtonPressed) {
+						return;
+					}
+					nextButtonPressed = false;
+					numTurn = 0;
+					launchTime = Time.timeSinceLevelLoad;
+					stdListCounter = 0;
+					tickListCounter = 0;
+					numCycles++;
+				} else {
+					numTurn++;
 				}
-				nextButtonPressed = false;
-
-				//waitTimeEnd = Time.timeSinceLevelLoad;
-
-				launchTime = Time.timeSinceLevelLoad;
-				stdListCounter = 0;
-				tickListCounter = 0;
 				microphone.SetActive (false);
 				drum.SetActive (false);
 
-				numCycles++;
+				//numCycles++;
 				offset = 0;
-				//offset = (numCycles * beat * 12) + (waitTimeEnd - waitTimeStart);
 				 
 				audioPlayed = 0;
 
 				return;
-			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 6) {
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4 + numTurn*8) {
 				countdownText.text = "";
 
 				// Display icons
@@ -180,9 +184,7 @@ public class DrumController : MonoBehaviour {
 					microphone.transform.position = drum.transform.position;
 					microphone.SetActive (true);
 				}
-				//microphone.SetActive (true);
-				//if(DBScript.rhythmicMode) drum.SetActive (true);
-			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
+			} /*else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
 				UpdateCountDownText ();
 				if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2 && audioPlayed == 1) {
 					voice = voices_60bpm [numCycles];
@@ -193,7 +195,8 @@ public class DrumController : MonoBehaviour {
 					voice.Play ();
 					audioPlayed = 3;
 				}
-			} else {
+			}*/ else {
+				UpdateCountDownText ();
 				if (micActive) {
 					//Microphone.End (Microphone.devices[0]);
 					micActive = false;
@@ -290,17 +293,17 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 5) {
+		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3 + numTurn*8) {
 			countdownText.text = "Go!";
 			if (!micActive) {
 				//audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
 				micActive = true;
 			}
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2 + numTurn*8) {
 			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 1 + numTurn*8) {
 			countdownText.text = "2";
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 0 + numTurn*8) {
 			countdownText.text = "3";
 		}
 	}

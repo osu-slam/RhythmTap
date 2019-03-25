@@ -51,7 +51,7 @@ public class MenuController : MonoBehaviour {
 			break;
 		}
 
-		rhythm += "8n 8n 4n";
+		rhythm += "8n 8n 4n 4r 4r";
 		impromptu = false;
 		SceneManager.LoadScene("MainScene");
 	}
