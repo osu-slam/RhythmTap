@@ -5,6 +5,7 @@ SceneListBegin?
 Assets/Welcome Scene.unity
 Assets/MainScene.unity
 Assets/Analysis.unity
+Assets/Instructions.unity
 Assets/RhythmSelection.unity
 SceneListEnd?
 984dcc0ba3707b7691fbdca8ff508d28 Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
@@ -169,3 +170,4 @@ c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3a6919521701de18da36df333a5703f7 Assembly-CSharp.dll:.MenuController
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 0fd863cab7786e6c35021c0cbbb1e0ed Assembly-CSharp.dll:.WelcomeController
+bcedaa81f0daa8130f731bc1c0d7e237 Assembly-CSharp.dll:.InstructionsController

@@ -15,6 +15,7 @@ public class DrumController : MonoBehaviour {
 	public AudioSource Clave;
 	public AudioSource WoodBlock;
 	public AudioSource[] voices_60bpm;
+	static int[] audioIndex = {0, 1, 2};
 	AudioSource voice;
 
     //public Text scoreText;
@@ -26,6 +27,7 @@ public class DrumController : MonoBehaviour {
 	public GameObject microphone;
 	public GameObject drum;
 	public GameObject nextButton;
+
 	//bool analyzed = false;
 
 	public List<float> keyDownList;
@@ -54,7 +56,7 @@ public class DrumController : MonoBehaviour {
 	int stdListCounter = 0;
 	int tickListCounter = 0;
 
-	int numCycles = 0;
+	public static int numCycles = 0;
 	static int MAX_CYCLES = 3;
 	int numTurn = 0;
 	static int TURNS_PER_CYCLE = 4;
@@ -62,6 +64,7 @@ public class DrumController : MonoBehaviour {
 	int audioPlayed = 0;
 	bool micActive = false;
 	bool nextButtonPressed = false;
+	bool setInstrActive = true;
 	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
 
 	float waitTimeStart = -1f;
@@ -121,10 +124,10 @@ public class DrumController : MonoBehaviour {
 				phraseSections [i].text = phrase [i];
 		}*/
 
-
-		/* Shuffle voice prompts for randomization */
-		System.Random rnd = new System.Random();
-		voices_60bpm = voices_60bpm.OrderBy(x => rnd.Next()).ToArray();  
+		if (numCycles == 0) {
+			System.Random rnd = new System.Random ();
+			audioIndex = audioIndex.OrderBy (x => rnd.Next ()).ToArray ();  
+		}
 	}
 
 	// Update is called once per frame
@@ -151,7 +154,11 @@ public class DrumController : MonoBehaviour {
 					launchTime = Time.timeSinceLevelLoad;
 					stdListCounter = 0;
 					tickListCounter = 0;
-					numCycles++;
+					setInstrActive = true;
+
+					if (++numCycles < MAX_CYCLES) {
+						SceneManager.LoadScene ("Instructions");
+					}
 				} else {
 					numTurn++;
 				}
@@ -184,30 +191,20 @@ public class DrumController : MonoBehaviour {
 					microphone.transform.position = drum.transform.position;
 					microphone.SetActive (true);
 				}
-			} /*else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2) {
-				UpdateCountDownText ();
-				if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2 && audioPlayed == 1) {
-					voice = voices_60bpm [numCycles];
-					voice.Play ();
-					audioPlayed = 2;
-				} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4 && audioPlayed == 2) {
-					voice = voices_60bpm [numCycles];
-					voice.Play ();
-					audioPlayed = 3;
-				}
-			}*/ else {
-				UpdateCountDownText ();
-				if (micActive) {
-					//Microphone.End (Microphone.devices[0]);
-					micActive = false;
-				}
+			} else {
+					UpdateCountDownText ();
+					if (micActive) {
+						//Microphone.End (Microphone.devices[0]);
+						micActive = false;
+					}
 
-				if (audioPlayed == 0) {
-					voice = voices_60bpm [numCycles];
-					voice.Play ();
-					audioPlayed = 1;
-				}
-				nextButton.SetActive (false);
+					if (audioPlayed == 0) {
+						voice = voices_60bpm[audioIndex[numCycles]];
+						voice.Play ();
+						audioPlayed = 1;
+					}
+					nextButton.SetActive (false);
+			
 			}
 		} else {
 			EndPlayingSession ();

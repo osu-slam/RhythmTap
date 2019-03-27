@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\DBScript.cs" />
      <Compile Include="Assets\Scripts\DrumController.cs" />
      <Compile Include="Assets\Scripts\EndScreenController.cs" />
+     <Compile Include="Assets\Scripts\InstructionsController.cs" />
      <Compile Include="Assets\Scripts\LogManager.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
      <Compile Include="Assets\Scripts\MusicElement.cs" />

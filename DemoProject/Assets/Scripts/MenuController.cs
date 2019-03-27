@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Xml;
+using System;
 
 public class MenuController : MonoBehaviour {
 	public static float bpm = 55;
@@ -26,7 +28,6 @@ public class MenuController : MonoBehaviour {
 	public static int[] displayOrder;
 	public static int displayOrderLen;
 	private int noteCount = 0;
-
 
 	// Use this for initialization
 	void Start () {
@@ -53,7 +54,9 @@ public class MenuController : MonoBehaviour {
 
 		rhythm += "8n 8n 4n 4r 4r";
 		impromptu = false;
-		SceneManager.LoadScene("MainScene");
+		DrumController.numCycles = 0;  
+
+		SceneManager.LoadScene("Instructions");
 	}
 
 	/* Called by DBScript NOT IN USE*/
