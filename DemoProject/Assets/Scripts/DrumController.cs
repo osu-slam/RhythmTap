@@ -174,6 +174,13 @@ public class DrumController : MonoBehaviour {
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4 + numTurn*8) {
 				countdownText.text = "";
 
+				// Display the opaque icons indicating user's turn
+				drum.GetComponent<Image> ().color = new Color32 (255, 255, 255, 255);
+				microphone.GetComponent<Image> ().color = new Color32 (255, 255, 255, 255);
+
+			} else {
+				UpdateCountDownText ();
+
 				// Display icons
 				if (numCycles == 0) { // Tapping
 					Vector3 drumPos = drum.transform.position;
@@ -181,29 +188,32 @@ public class DrumController : MonoBehaviour {
 					drum.SetActive (true);
 				} else if (numCycles == 1) { // Tapping and speaking
 					Vector3 drumPos = drum.transform.position;
-                    microphone.transform.localScale = new Vector3(7f, 7f, 1f);
+					microphone.transform.localScale = new Vector3(7f, 7f, 1f);
 					microphone.transform.localPosition = new Vector3(140f, 80f, 0);
 					drum.transform.position = new Vector3(drumPos.x, drumPos.y, 0);
 					drum.SetActive (true);
 					microphone.SetActive (true);
 				} else { // Speaking
-                    microphone.transform.localScale = new Vector3(20f, 20f, 1f);
+					microphone.transform.localScale = new Vector3(20f, 20f, 1f);
 					microphone.transform.position = drum.transform.position;
 					microphone.SetActive (true);
 				}
-			} else {
-					UpdateCountDownText ();
-					if (micActive) {
-						//Microphone.End (Microphone.devices[0]);
-						micActive = false;
-					}
 
-					if (audioPlayed == 0) {
-						voice = voices_60bpm[audioIndex[numCycles]];
-						voice.Play ();
-						audioPlayed = 1;
-					}
-					nextButton.SetActive (false);
+				// "Gray-out" the icons since user is not supposed to do anything yet
+				drum.GetComponent<Image> ().color = new Color32 (255, 255, 255, 100);
+				microphone.GetComponent<Image> ().color = new Color32 (255, 255, 255, 100);
+
+				if (micActive) {
+					//Microphone.End (Microphone.devices[0]);
+					micActive = false;
+				}
+
+				if (audioPlayed == 0) {
+					voice = voices_60bpm[audioIndex[numCycles]];
+					voice.Play ();
+					audioPlayed = 1;
+				}
+				nextButton.SetActive (false);
 			
 			}
 		} else {
