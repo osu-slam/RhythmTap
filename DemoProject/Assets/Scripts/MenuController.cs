@@ -45,10 +45,10 @@ public class MenuController : MonoBehaviour {
 			bpm = 60;
 			break;
 		case 1:
-			bpm = 65;
+			bpm = 90;
 			break;
 		default:
-			bpm = 75;
+			bpm = 120;
 			break;
 		}
 

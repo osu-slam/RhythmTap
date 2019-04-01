@@ -14,7 +14,11 @@ public class DrumController : MonoBehaviour {
 
 	public AudioSource Clave;
 	public AudioSource WoodBlock;
-	public AudioSource[] voices_60bpm;
+
+	public AudioSource[] yummy_food_60bpm;
+	public AudioSource[] yummy_food_90bpm;
+	public AudioSource[] yummy_food_120bpm;
+
 	static int[] audioIndex = {0, 1, 2};
 	AudioSource voice;
 
@@ -143,7 +147,7 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
-			if (Time.timeSinceLevelLoad - launchTime - offset > beat * 8 + numTurn* 8) {
+			if (Time.timeSinceLevelLoad - launchTime - offset > beat * (8 + numTurn* 8)) {
 				if (numTurn == TURNS_PER_CYCLE-1) {
 					nextButton.SetActive (true);
 					if (!nextButtonPressed) {
@@ -171,7 +175,7 @@ public class DrumController : MonoBehaviour {
 				audioPlayed = 0;
 
 				return;
-			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 4 + numTurn*8) {
+			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (4 + numTurn*8)) {
 				countdownText.text = "";
 
 				// Display the opaque icons indicating user's turn
@@ -209,7 +213,7 @@ public class DrumController : MonoBehaviour {
 				}
 
 				if (audioPlayed == 0) {
-					voice = voices_60bpm[audioIndex[numCycles]];
+					voice = GetVoice();
 					voice.Play ();
 					audioPlayed = 1;
 				}
@@ -231,6 +235,22 @@ public class DrumController : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	AudioSource GetVoice() {
+		AudioSource voice = null;
+
+		if ((int)bpm == 60) {
+			voice = yummy_food_60bpm [audioIndex [numCycles]];
+		} else if ((int)bpm == 90) {
+			voice = yummy_food_90bpm [audioIndex [numCycles]];
+		} else if ((int)bpm == 120) {
+			voice = yummy_food_120bpm [audioIndex [numCycles]];
+		} else {
+			Debug.Log ("bpm does not match");
+		}
+
+		return voice;
 	}
 
 	//analizing timestamps after finishing the song
@@ -300,18 +320,26 @@ public class DrumController : MonoBehaviour {
 	}
 
 	void UpdateCountDownText(){
-		if (Time.timeSinceLevelLoad - launchTime - offset > beat * 3 + numTurn*8) {
+		if (Time.timeSinceLevelLoad - launchTime - offset > beat * (3 + numTurn * 8)) {
 			countdownText.text = "Go!";
 			if (!micActive) {
 				//audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
 				micActive = true;
 			}
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 2 + numTurn*8) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (2 + numTurn * 8)) {
 			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 1 + numTurn*8) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (1 + numTurn * 8)) {
 			countdownText.text = "2";
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * 0 + numTurn*8) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (0 + numTurn * 8)) {
 			countdownText.text = "3";
+		} else {
+			Debug.Log ("No countdown rendered");
+			Debug.Log (Time.timeSinceLevelLoad - launchTime - offset);
+			//Debug.Log (beat * 0 + numTurn * 8);
+			Debug.Log ("numTurn " + numTurn);
+			//Debug.Log ("beat "+ beat);
+			//Debug.Log ("timeSinceLevelLoad "+ Time.timeSinceLevelLoad);
+			//Debug.Log ("launchTime "+ launchTime);
 		}
 	}
 
