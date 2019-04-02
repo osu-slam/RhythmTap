@@ -18,6 +18,12 @@ public class DrumController : MonoBehaviour {
 	public AudioSource[] yummy_food_60bpm;
 	public AudioSource[] yummy_food_90bpm;
 	public AudioSource[] yummy_food_120bpm;
+	public AudioSource[] help_me_60bpm;
+	public AudioSource[] help_me_90bpm;
+	public AudioSource[] help_me_120bpm;
+	public AudioSource[] like_seeing_you_60bpm;
+	public AudioSource[] like_seeing_you_90bpm;
+	public AudioSource[] like_seeing_you_120bpm;
 
 	static int[] audioIndex = {0, 1, 2};
 	AudioSource voice;
@@ -94,6 +100,7 @@ public class DrumController : MonoBehaviour {
 		// Other variables
 		countdownText.text = "";
 		keyDownList = new List<float> ();
+		promptText.text = MenuController.phrase;
 	
 
 		/* Load but hide end screen */
@@ -240,14 +247,48 @@ public class DrumController : MonoBehaviour {
 	AudioSource GetVoice() {
 		AudioSource voice = null;
 
-		if ((int)bpm == 60) {
-			voice = yummy_food_60bpm [audioIndex [numCycles]];
-		} else if ((int)bpm == 90) {
-			voice = yummy_food_90bpm [audioIndex [numCycles]];
-		} else if ((int)bpm == 120) {
-			voice = yummy_food_120bpm [audioIndex [numCycles]];
+		if (MenuController.phrase.Equals("Yummy Food")) {
+			switch ((int)bpm) {
+			case 60:
+				voice = yummy_food_60bpm [audioIndex [numCycles]];
+				break;
+			case 90:
+				voice = yummy_food_90bpm [audioIndex [numCycles]];
+				break;
+			case 120:
+				voice = yummy_food_120bpm [audioIndex [numCycles]];
+				break;
+			default:
+				Debug.LogError ("bpm does not match");
+				break;
+			}
+		} else if (MenuController.phrase.Equals("Help Me")) {
+			switch ((int)bpm) {
+			case 60:
+				voice = help_me_60bpm [audioIndex [numCycles]];
+				break;
+			case 90:
+				voice = help_me_90bpm [audioIndex [numCycles]];
+				break;
+			case 120:
+				voice = help_me_120bpm [audioIndex [numCycles]];
+				break;
+			default:
+				Debug.LogError ("bpm does not match");
+				break;
+			}
+		} else if (MenuController.phrase.Equals("Like Seeing You")) {
+			if ((int)bpm == 60) {
+				voice = like_seeing_you_60bpm [audioIndex [numCycles]];
+			} else if ((int)bpm == 90) {
+				voice = like_seeing_you_90bpm [audioIndex [numCycles]];
+			} else if ((int)bpm == 120) {
+				voice = like_seeing_you_120bpm [audioIndex [numCycles]];
+			} else {
+				Debug.Log ("bpm does not match");
+			}
 		} else {
-			Debug.Log ("bpm does not match");
+			Debug.LogError ("phrase not available");
 		}
 
 		return voice;
@@ -334,9 +375,9 @@ public class DrumController : MonoBehaviour {
 			countdownText.text = "3";
 		} else {
 			Debug.Log ("No countdown rendered");
-			Debug.Log (Time.timeSinceLevelLoad - launchTime - offset);
+			//Debug.Log (Time.timeSinceLevelLoad - launchTime - offset);
 			//Debug.Log (beat * 0 + numTurn * 8);
-			Debug.Log ("numTurn " + numTurn);
+			//Debug.Log ("numTurn " + numTurn);
 			//Debug.Log ("beat "+ beat);
 			//Debug.Log ("timeSinceLevelLoad "+ Time.timeSinceLevelLoad);
 			//Debug.Log ("launchTime "+ launchTime);

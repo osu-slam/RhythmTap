@@ -16,7 +16,8 @@ public class MenuController : MonoBehaviour {
 	public Text Username_field;
 	public static AudioClip audioClip;
 	public InputField inputField;
-	public Dropdown dp;
+	public Dropdown bpmDP;
+	public Dropdown rhythmDP;
 	public Sprite quarterNote;
 	public Sprite eighthNotes;
 	public Sprite emptySlot;
@@ -24,7 +25,7 @@ public class MenuController : MonoBehaviour {
 	public InputField[] words;
 
 	public static string rhythm = "";
-	public static string[] phrase;
+	public static string phrase;
 	public static int[] displayOrder;
 	public static int displayOrderLen;
 	private int noteCount = 0;
@@ -32,7 +33,7 @@ public class MenuController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		bpm = 30;
-		phrase = new string[3];
+		phrase = "";
 		displayOrder = new int[6];
 		displayOrderLen = 0;
 		rhythm = "";
@@ -40,7 +41,7 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void StartGame(){
-		switch (dp.value) {
+		switch (bpmDP.value) {
 		case 0:
 			bpm = 60;
 			break;
@@ -52,7 +53,21 @@ public class MenuController : MonoBehaviour {
 			break;
 		}
 
-		rhythm += "8n 8n 4n 4r 4r";
+		switch (rhythmDP.value) {
+		case 0:
+			phrase = "Yummy Food";
+			rhythm = "8n 8n 4n 4r 4r";
+			break;
+		case 1:
+			phrase = "Help Me";
+			rhythm = "4n 4n 4r 4r";
+			break;
+		default:
+			phrase = "Like Seeing You";
+			rhythm = "4n 8n 8n 4n 4r";
+			break;
+		}
+			
 		impromptu = false;
 		DrumController.numCycles = 0;  
 
