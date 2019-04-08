@@ -23,19 +23,19 @@ public class InstructionsController : MonoBehaviour
 		numCycles = DrumController.numCycles;
 		if (numCycles == 0) {
 			practiceType.text = "tapping";
-			countdownInstr.text = "You will also see a red countdown at the center of the screen. Once countdown reaches \"Go!\", it is your turn to tap on the screen.";
+			countdownInstr.text = "There will be a red countdown. When it says \"Go!\", it's your turn to \ntap.";
 			phaseImgs [0].SetActive (true);
 			phaseImgs [1].SetActive (false);
 			phaseImgs [2].SetActive (false);
 		} else if (numCycles == 1) {
 			practiceType.text = "tapping and speaking";
-			countdownInstr.text = "You will also see a red countdown at the center of the screen. Once countdown reaches \"Go!\", it is your turn to tap on the screen while speaking the phrase.";
+			countdownInstr.text = "There will be a red countdown. When it says \"Go!\", it's your turn to \ntap and speak.";
 			phaseImgs [0].SetActive (false);
 			phaseImgs [1].SetActive (true);
 			phaseImgs [2].SetActive (false);
 		} else {
 			practiceType.text = "speaking";
-			countdownInstr.text = "You will also see a red countdown at the center of the screen. Once countdown reaches \"Go!\", it is your turn to speak the phrase.";
+			countdownInstr.text = "There will be a red countdown. When it says \"Go!\", it's your turn to \nspeak.";
 			phaseImgs [0].SetActive (false);
 			phaseImgs [1].SetActive (false);
 			phaseImgs [2].SetActive (true);

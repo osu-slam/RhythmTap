@@ -122,4 +122,13 @@ public class MenuController : MonoBehaviour {
 	public void onValueChanged(){
 
 	}
+
+	public void RestartSession(){
+		Debug.Log (bpm);
+		Debug.Log (rhythm + phrase);
+		impromptu = false;
+		DrumController.numCycles = 0;  
+
+		SceneManager.LoadScene("Instructions");
+	}
 }

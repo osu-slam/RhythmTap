@@ -27,6 +27,7 @@ public class DrumController : MonoBehaviour {
 
 	static int[] audioIndex = {0, 1, 2};
 	AudioSource voice;
+	float[] countdownDelay = new float[4];
 
     //public Text scoreText;
     public Text countdownText;
@@ -139,6 +140,13 @@ public class DrumController : MonoBehaviour {
 			System.Random rnd = new System.Random ();
 			audioIndex = audioIndex.OrderBy (x => rnd.Next ()).ToArray ();  
 		}
+
+		// Calculate countdown delay
+		if (!DBScript.rhythmicMode) {
+			for (int i = 0; i < 4; i++) {
+				countdownDelay [i] = UnityEngine.Random.Range (-0.2f, 0.2f);
+			}
+		}
 	}
 
 	// Update is called once per frame
@@ -178,9 +186,14 @@ public class DrumController : MonoBehaviour {
 
 				//numCycles++;
 				offset = 0;
-				 
 				audioPlayed = 0;
 
+				if (!DBScript.rhythmicMode) {
+					// Calculate countdown delay
+					for (int i = 0; i < 4; i++) {
+						countdownDelay [i] = UnityEngine.Random.Range (-0.2f, 0.2f);
+					}
+				}
 				return;
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (4 + numTurn*8)) {
 				countdownText.text = "";
@@ -367,14 +380,15 @@ public class DrumController : MonoBehaviour {
 				//audioClip[numCycles] = Microphone.Start (Microphone.devices[0], false, 6, 44100);
 				micActive = true;
 			}
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (2 + numTurn * 8)) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (2 + numTurn * 8) + countdownDelay[2]) {
 			countdownText.text = "1";
-		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (1 + numTurn * 8)) {
+		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (1 + numTurn * 8) + countdownDelay[1]) {
 			countdownText.text = "2";
 		} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (0 + numTurn * 8)) {
 			countdownText.text = "3";
 		} else {
-			Debug.Log ("No countdown rendered");
+			countdownText.text = "";
+			//Debug.Log ("No countdown rendered");
 			//Debug.Log (Time.timeSinceLevelLoad - launchTime - offset);
 			//Debug.Log (beat * 0 + numTurn * 8);
 			//Debug.Log ("numTurn " + numTurn);
