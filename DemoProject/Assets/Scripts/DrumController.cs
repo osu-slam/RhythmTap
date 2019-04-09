@@ -162,6 +162,12 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
+			if (Input.touchCount > 0) {
+				//UpdateKeyDown ();
+				AndroidManager.HapticFeedback();
+			}
+
+
 			if (Time.timeSinceLevelLoad - launchTime - offset > beat * (8 + numTurn* 8)) {
 				if (numTurn == TURNS_PER_CYCLE-1) {
 					nextButton.SetActive (true);

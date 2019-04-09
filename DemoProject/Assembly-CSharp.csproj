@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\DropDownEffect.cs" />
      <Compile Include="Assets\MainSceneScript.cs" />
+     <Compile Include="Assets\Scripts\AndroidManager.cs" />
      <Compile Include="Assets\Scripts\DBScript.cs" />
      <Compile Include="Assets\Scripts\DrumController.cs" />
      <Compile Include="Assets\Scripts\EndScreenController.cs" />
