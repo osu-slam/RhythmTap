@@ -162,10 +162,11 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
-			if (Input.touchCount > 0) {
+			// Haptic feedback currently not working
+			/*if (Input.touchCount > 0) {
 				//UpdateKeyDown ();
 				AndroidManager.HapticFeedback();
-			}
+			}*/
 
 
 			if (Time.timeSinceLevelLoad - launchTime - offset > beat * (8 + numTurn* 8)) {
