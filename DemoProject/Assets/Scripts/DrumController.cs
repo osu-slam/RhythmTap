@@ -39,9 +39,10 @@ public class DrumController : MonoBehaviour {
 	public GameObject drum;
 	public GameObject nextButton;
 
-	//bool analyzed = false;
+	bool analyzed = false;
 
 	public List<float> keyDownList;
+	public List<float> tapList;		// When user is expected to tap
 	public List<float> stdList;
 	public List<float> tickList;
 	public List<float> halfNotes;
@@ -76,10 +77,14 @@ public class DrumController : MonoBehaviour {
 	bool micActive = false;
 	bool nextButtonPressed = false;
 	bool setInstrActive = true;
+	bool userTurn = false;
 	AudioClip[] audioClip = new AudioClip[MAX_CYCLES];
 
 	float waitTimeStart = -1f;
 	float waitTimeEnd = 0.0f;
+
+	float delayMax = 0f;
+	float delayMin = 0.1f;
 
 	void Start () {
 		/* Initialize variables */
@@ -112,19 +117,21 @@ public class DrumController : MonoBehaviour {
 
 		/* Avoid unnecessary logs when debugging*/
 		if(MenuController.debug == false)
-			LogManager.Instance.LogSessionStart (bpm, MenuController.gameNum);
+			LogManager.Instance.LogSessionStart (bpm, MenuController.phrase, numCycles, DBScript.rhythmicMode);
 
 
         /* Load rhythms if in rhythmic */
-		if (DBScript.rhythmicMode) {
+		//if (DBScript.rhythmicMode) {
 			RhythmLoader rhythmLoader = new RhythmLoader ();
 			rhythmLoader.LoadRhythm (MenuController.rhythm, bpm, lengthOfAudio);
 			stdList = rhythmLoader.GetRhythmTimes ();
 			tickList = rhythmLoader.GetTickTimes ();
-		} else {
-			stdList = new List<float> ();
-			tickList = new List<float> ();
-		}
+			tapList = new List<float> ();
+		//} else {
+		//	stdList = new List<float> ();
+		//	tickList = new List<float> ();
+		//	tapList = new List<float> ();
+		//}
 
 		/* Populate phrase prompt */
 		/* NOT IN USE */
@@ -143,8 +150,26 @@ public class DrumController : MonoBehaviour {
 
 		// Calculate countdown delay
 		if (!DBScript.rhythmicMode) {
+			switch ((int)bpm) {
+			case 60:
+				delayMax = 0.4f;
+				break;
+			case 90:
+				delayMax = 0.25f;
+				break;
+			case 120:
+				delayMax = 0.15f;
+				break;
+			}
+
 			for (int i = 0; i < 4; i++) {
-				countdownDelay [i] = UnityEngine.Random.Range (-0.2f, 0.2f);
+				float delay = UnityEngine.Random.Range (-delayMax, delayMax);
+				if (delay < 0) {
+					delay -= delayMin;
+				} else {
+					delay += delayMin;
+				}
+				countdownDelay [i] = delay;
 			}
 		}
 	}
@@ -163,10 +188,10 @@ public class DrumController : MonoBehaviour {
 	void UpdateRegularPlayMode(){
 		if (numCycles < MAX_CYCLES) {
 			// Haptic feedback currently not working
-			/*if (Input.touchCount > 0) {
-				//UpdateKeyDown ();
-				AndroidManager.HapticFeedback();
-			}*/
+			if (userTurn && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+				UpdateKeyDown ();
+				//AndroidManager.HapticFeedback();
+			}
 
 
 			if (Time.timeSinceLevelLoad - launchTime - offset > beat * (8 + numTurn* 8)) {
@@ -176,6 +201,11 @@ public class DrumController : MonoBehaviour {
 						return;
 					}
 					nextButtonPressed = false;
+
+					// Stop tracking when user is supposed to be tapping
+					userTurn = false;
+					PerformanceAnalysis ();
+
 					numTurn = 0;
 					launchTime = Time.timeSinceLevelLoad;
 					stdListCounter = 0;
@@ -186,6 +216,8 @@ public class DrumController : MonoBehaviour {
 						SceneManager.LoadScene ("Instructions");
 					}
 				} else {
+					// Stop tracking when user is supposed to be tapping
+					userTurn = false;
 					numTurn++;
 				}
 				microphone.SetActive (false);
@@ -198,11 +230,20 @@ public class DrumController : MonoBehaviour {
 				if (!DBScript.rhythmicMode) {
 					// Calculate countdown delay
 					for (int i = 0; i < 4; i++) {
-						countdownDelay [i] = UnityEngine.Random.Range (-0.2f, 0.2f);
+						float delay = UnityEngine.Random.Range (-delayMax, delayMax);
+						if (delay < 0) {
+							delay -= delayMin;
+						} else {
+							delay += delayMin;
+						}
+						countdownDelay [i] = delay;
 					}
 				}
 				return;
 			} else if (Time.timeSinceLevelLoad - launchTime - offset > beat * (4 + numTurn*8)) {
+				// Start tracking when user is supposed to be tapping
+				userTurn = true;
+
 				countdownText.text = "";
 
 				// Display the opaque icons indicating user's turn
@@ -251,7 +292,7 @@ public class DrumController : MonoBehaviour {
 			EndPlayingSession ();
 		}
 
-		if(DBScript.rhythmicMode) UpdateDrumPrompt ();
+		UpdateDrumPrompt ();
 
 		if (hasEnded){
 			if (endScreenTime > 0.0f) {
@@ -316,25 +357,25 @@ public class DrumController : MonoBehaviour {
 
 	//analizing timestamps after finishing the song
 	void PerformanceAnalysis(){
-		TNBText = 0; //TODO: Temporarily set to zero
-		int stdListIndex = 0; //index for stdList
+		TNBText = tapList.Count;
+		int tapListIndex = 0; //index for tapList
 		int listIndex = 0; //index for list
 
-		while (stdListIndex < TNBText && listIndex < keyDownList.Count) {
-			float upper = stdList [stdListIndex] + error;
-			float lower = stdList [stdListIndex] - error;
+		while (tapListIndex < TNBText && listIndex < keyDownList.Count) {
+			float upper = tapList [tapListIndex] + error;
+			float lower = tapList [tapListIndex] - error;
 			if (keyDownList [listIndex] < upper && keyDownList [listIndex] > lower) {
 				if (MenuController.debug == false) {
-					LogManager.Instance.Log (stdList [stdListIndex], keyDownList [listIndex], stdListIndex);
+					LogManager.Instance.Log (tapList [tapListIndex], keyDownList [listIndex], tapListIndex);
 				}
 					
 				NOHText++;
-				stdListIndex++;
+				tapListIndex++;
 				listIndex++;
 			} else if (keyDownList [listIndex] > upper) {
 				if(MenuController.debug == false)
-					LogManager.Instance.Log (stdList [stdListIndex], NaN, stdListIndex);
-				stdListIndex++;
+					LogManager.Instance.Log (tapList [tapListIndex], NaN, tapListIndex);
+				tapListIndex++;
 			} else {
 				if(MenuController.debug == false)
 					LogManager.Instance.Log (NaN, keyDownList [listIndex], -1);
@@ -344,10 +385,10 @@ public class DrumController : MonoBehaviour {
 		}
 
 		//log remaining data
-		while (stdListIndex < TNBText) {
+		while (tapListIndex < TNBText) {
 			if(MenuController.debug == false)
-				LogManager.Instance.Log (stdList [stdListIndex], NaN, stdListIndex);
-			stdListIndex++;
+				LogManager.Instance.Log (tapList [tapListIndex], NaN, tapListIndex);
+			tapListIndex++;
 		}
 
 		while (listIndex < keyDownList.Count) {
@@ -371,12 +412,16 @@ public class DrumController : MonoBehaviour {
 
 	void UpdateDrumPrompt(){
 		if (stdListCounter < stdList.Count && Time.timeSinceLevelLoad >= launchTime + stdList [stdListCounter]) {
-			WoodBlock.Play ();
+			if(DBScript.rhythmicMode) WoodBlock.Play ();
+			if(userTurn) tapList.Add (stdList [stdListCounter]);
 			stdListCounter++;
 		}
-		if (tickListCounter < tickList.Count && Time.timeSinceLevelLoad >= launchTime + tickList [tickListCounter]) {
-			Clave.Play ();
-			tickListCounter++;
+
+		if (DBScript.rhythmicMode) {
+			if (tickListCounter < tickList.Count && Time.timeSinceLevelLoad >= launchTime + tickList [tickListCounter]) {
+				Clave.Play ();
+				tickListCounter++;
+			}
 		}
 	}
 
@@ -424,17 +469,13 @@ public class DrumController : MonoBehaviour {
 				DateTime.Now.Minute.ToString();
 			//SavWav.Save (filename, audioClip[i]);
 		}
-		/**if (analyzed == false) {
+
+		/*if (analyzed == false) {
 			PerformanceAnalysis ();
 			analyzed = true;
 		}*/
-		//if (!DBScript.rhythmicMode) {
-			// Hide voice scores from analysis
-		//	SceneManager.LoadScene ("Analysis2");
-		//} else {
-			SceneManager.LoadScene ("Analysis");
-		//}
 
+		SceneManager.LoadScene ("Analysis");
 	}
 
 	void LoadAnalysis(){

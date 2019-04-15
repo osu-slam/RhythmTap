@@ -11,7 +11,7 @@ public class MenuController : MonoBehaviour {
 	public static float bpm = 55;
 	public static bool impromptu;
 	public static int gameNum;
-	public static bool debug = true;
+	public static bool debug = false;
 
 	public Text Username_field;
 	public static AudioClip audioClip;

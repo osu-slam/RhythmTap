@@ -21,19 +21,23 @@ public class LogManager {
     internal string path;
     private LogManager()
     {
-		string directory = Path.Combine("", "Log");
+		
+
+		string directory = Path.Combine(Application.persistentDataPath, "Log");
+		Debug.Log ("directory path: " +  directory);
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
 		string filename =  WelcomeController.name + "_" + DateTime.Now.Month.ToString() + "_" + DateTime.Now.Day.ToString() + "_" + DateTime.Now.Hour.ToString() + "_" + DateTime.Now.Minute.ToString() + ".csv" ;
 		path = Path.Combine(directory, filename);
+		//System.IO.File.AppendAllText(path, "this,is a test");
     }
         
     internal void Log(float onsetTime, int index)
     {
 		string contents = index.ToString() + "," + onsetTime.ToString() +  "\n";
-        File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
     }
 
 	internal void Log(float eOnsetTime, float aOnsetTime,/* float eDuration, float aDuration,*/ int index)
@@ -49,19 +53,19 @@ public class LogManager {
 			/*eDuration.ToString() + "," +
 			aDuration.ToString() + "," +
 			(eDuration - aDuration).ToString() + "," + */"\n";
-		File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
 	}
 
 	internal void Log(string arg1, string arg2,string arg3)
 	{
 		string contents = arg1 + "," + arg2 + "," + arg3 + "," + "\n";
-		File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
 	}
 
 	internal void Log(string arg1, string arg2)
 	{
 		string contents = arg1 + "," + arg2 + ","  + "\n";
-		File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
 	}
 
 
@@ -69,7 +73,7 @@ public class LogManager {
 	internal void Log()
 	{
 		string contents = DateTime.Now +"\n";
-		File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
 	}
 
 
@@ -81,7 +85,7 @@ public class LogManager {
             contents += "," + args[i];
         }
         contents += "," + DateTime.Now + "\n";
-        File.AppendAllText(path, contents);
+		System.IO.File.AppendAllText(path, contents);
     }
     internal enum SongType
     {
@@ -89,18 +93,15 @@ public class LogManager {
         MP3PERSONAL,
         YOUTUBE,
     }
-	internal void LogSessionStart(float bpm, int gameNum)
+	internal void LogSessionStart(float bpm, string sentence, int phase, bool rhythmic)
     {
+		Log("","");
         Log("Session", "Start", DateTime.Now.ToString());
-		Log ("Game Number", gameNum.ToString());
+		Log("Sentence", sentence);
+		Log("Phase", phase.ToString());
+		Log("Rhythmic", rhythmic.ToString());
 		Log("BPM", bpm.ToString("f4"));
 		Log ("Onset Error", '\u00B1' + " 0.1");
-		Log ("Duration Threshold", "0.85");
-		Log ("Response Lag", "0.15");
-		Log ("Index", "Onset_Expected, Onset_Actual, Onset_Diff", "Dur_Expected, Dur_Actual, Dur_Diff");
-        //Log("Session", new string[] { "Song", title, type.ToString()});
-       // Log("Session", "Difficulty", difficulty.ToString());
-        //Log("Session", "Drums", drums.ToString());
-        //Log("Session", "TimeSignature", timeSignature);
+		Log ("Index", "Onset_Expected, Onset_Actual, Onset_Diff");
     }
 }
